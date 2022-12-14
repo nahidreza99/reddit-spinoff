@@ -30,7 +30,9 @@ footer, header, hgroup, menu, nav, section {
 }
 
 body {
+    height: 100vh;
 	line-height: 1;
+    font-family: 'Roboto', sans-serif;
 }
 
 ol, ul {
@@ -92,7 +94,7 @@ nav{
     background-color: #1B1B1B;
     height: 100%;
     display: grid;
-    grid-template-columns: 4fr 6fr 4fr;
+    grid-template-columns: 4fr 8fr 4fr;
     column-gap: 10px;
 }
 
@@ -101,7 +103,7 @@ nav{
 }
 
 .left{
-    background-color: green;
+    background-color: #000B17;
     border-radius: 0 10px 0 0;
 }
 
@@ -113,4 +115,76 @@ nav{
 .right{
     background-color: green;
     border-radius: 10px 0px 0 0;
+}
+
+.search{
+    height: 50px;
+    background-color: #000B17;
+    border-radius: inherit;
+}
+
+.label{
+    height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    padding: 0 10px;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.feature{
+    padding:0 25px;
+    height: 45px;
+    background-color: rgba(0, 163, 255, 0.1);
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.clickable{
+    display: inline-block;
+}
+
+a>ul>li>i{
+    font-size: 2rem;
+    color: red;
+}
+
+.label i{
+    color: red;
+    padding-left: 7px;
+}
+
+a{
+    text-decoration: none;
+}
+
+a ul{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+a ul li{
+    color: white;
+    margin-right: 5px;
+}
+
+.info ul{
+    display: flex;
+    flex-direction: row;
+}
+.info>ul>li{
+    padding: 0 5px;
+    color: white;
+}
+
+.scrollpane{
+    height: calc(100vh - 150px);
+
+    overflow-y: auto;
 }
