@@ -35,6 +35,21 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+p{
+    color: white;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.flex{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 ol, ul {
 	list-style: none;
 }
@@ -57,10 +72,6 @@ table {
 nav{
     color: seashell;
     height: 70px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
     background-color: #000B17;
 }
 
@@ -72,11 +83,6 @@ nav{
 
 .nav-bar{
     margin-right: 5rem;
-}
-
-.nav-bar ul{
-    display: flex;
-    flex-direction: row;
 }
 
 .nav-bar ul>li{
@@ -108,7 +114,7 @@ nav{
 }
 
 .center{
-    background-color: yellow;
+    background-color: #000B17;
     border-radius: 10px 10px 0 0;
 }
 
@@ -139,19 +145,16 @@ nav{
     padding:0 25px;
     height: 45px;
     background-color: rgba(0, 163, 255, 0.1);
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
 }
 
 .clickable{
-    display: inline-block;
+    color: white;
 }
 
-a>ul>li>i{
+.clickable>i{
     font-size: 2rem;
     color: red;
+    padding-right: 5px;
 }
 
 .label i{
@@ -163,12 +166,6 @@ a{
     text-decoration: none;
 }
 
-a ul{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
 a ul li{
     color: white;
     margin-right: 5px;
@@ -178,6 +175,7 @@ a ul li{
     display: flex;
     flex-direction: row;
 }
+
 .info>ul>li{
     padding: 0 5px;
     color: white;
@@ -185,6 +183,62 @@ a ul li{
 
 .scrollpane{
     height: calc(100vh - 150px);
-
     overflow-y: auto;
+}
+
+.post-container{
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 17px 0px 17px 17px;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.post-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.post-header>ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.post-header>ul>li{
+    padding: 0px 5px;
+    list-style: disc;
+    list-style-position: inside;
+    color: white;
+    text-indent: 0px;
+}
+
+.bullet{
+    font-size: 5px;
+    padding: 0 7px;
+}
+
+.grey{
+    color: rgba(217, 217, 217, 0.6);
+}
+
+.post-title{
+    color: white;
+    font-size: 1.2rem;
+    margin: 15px 0;
+}
+
+.post-body{
+    margin: 15px 0;
+}
+
+.post-footer{
+    color: white;
+}
+
+.post-footer p{
+    padding: 7px;
 }
