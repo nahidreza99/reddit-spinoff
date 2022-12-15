@@ -41,6 +41,29 @@ p{
     color: white;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 10px 10px;
+    border: 1px solid rgba(217, 217, 217, 0.3);
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+  }
+
 .bold{
     font-weight: bold;
 }
@@ -212,7 +235,7 @@ a ul li{
 .post-container{
     height: auto;
     background-color: rgba(255, 255, 255, 0.1);
-    margin: 0px 0px 17px 17px;
+    margin: 0px 0px 10px 10px;
     border-radius: 10px;
     padding: 15px;
 }
