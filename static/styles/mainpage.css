@@ -127,9 +127,28 @@ nav{
 }
 
 .search{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 50px;
     background-color: #000B17;
     border-radius: inherit;
+}
+
+.search-container{
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(225, 225, 225, 0.1);
+    height: 30px;
+    border-radius: 20px 20px;
+}
+
+.search-container>*{
+    margin: 0 5px;
+    background-color: transparent;
+    color: aliceblue;
+    border: none;
+    outline: none;
 }
 
 .label{
