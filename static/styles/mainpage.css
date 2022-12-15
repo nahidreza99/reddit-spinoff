@@ -33,6 +33,7 @@ body {
     height: 100vh;
 	line-height: 1;
     font-family: 'Roboto', sans-serif;
+    overflow: hidden;
 }
 
 p{
@@ -92,7 +93,7 @@ nav{
 .main{
     position: absolute;
     top: 70px; /* Header Height */
-    bottom: 20px; /* Footer Height */
+    bottom: 0px; /* Footer Height */
     width: 100%;
 }
 
@@ -183,7 +184,7 @@ a ul li{
 }
 
 .scrollpane{
-    height: calc(100vh - 150px);
+    height: calc(100vh - 130px);
     overflow-y: auto;
 }
 
@@ -253,12 +254,6 @@ a ul li{
     justify-content: center;
 }
 
-.shoutbox{
-    background-color: #000B17;
-    border-radius: 10px 0 0 0;
-    color: white;
-}
-
 .stat{
     display: flex;
     flex-direction: column;
@@ -316,7 +311,77 @@ a ul li{
 }
 
 .online-status>i{
-    font-size: 10px;
+    
     padding-right: 5px;
+}
+
+.active{
     color: chartreuse;
+    font-size: 8px;
+}
+
+.red{
+    color: red;
+}
+
+.shoutbox{
+    background-color: #000B17;
+    border-radius: 10px 0 0 0;
+    color: white;
+}
+
+.shout{
+    display: flex;
+    flex-direction: column-reverse;
+    margin-left: 10px;
+    height: 256px;
+    overflow-y: scroll;
+}
+
+.message{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    font-size: 14px;
+}
+
+.message>*{
+    padding-right: 5px;
+}
+
+.msg-info>p{
+    margin-right: 5px;
+}
+
+.msg-body{
+    flex: 1 1 0;
+}
+
+.message-box{
+    background-color: rgba(217, 217, 217, 0.3);
+    height: 35px;
+    padding: 0 10px;
+    border-radius: 20px 20px;
+    margin: 10px;
+}
+
+.message-box>input{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: calc(100% - 25px);
+}
+
+.message-box>i{
+    font-size: 20px;
+}
+
+.shoutbox-label{
+    background-color: rgba(255, 255, 255, 0.1);
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: inherit;
 }
