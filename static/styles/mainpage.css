@@ -34,6 +34,7 @@ body {
 	line-height: 1;
     font-family: 'Roboto', sans-serif;
     overflow: hidden;
+    font-size: 14px;
 }
 
 p{
@@ -101,7 +102,7 @@ nav{
     background-color: #1B1B1B;
     height: 100%;
     display: grid;
-    grid-template-columns: 4fr 8fr 4fr;
+    grid-template-columns: 4fr 6fr 4fr;
     column-gap: 10px;
 }
 
@@ -146,6 +147,7 @@ nav{
 .feature{
     padding:0 25px;
     height: 45px;
+    font-size: 14px;
     background-color: rgba(0, 163, 255, 0.1);
 }
 
@@ -191,7 +193,7 @@ a ul li{
 .post-container{
     height: auto;
     background-color: rgba(255, 255, 255, 0.1);
-    margin: 17px 0px 17px 17px;
+    margin: 0px 0px 17px 17px;
     border-radius: 10px;
     padding: 15px;
 }
@@ -235,6 +237,7 @@ a ul li{
 
 .post-body{
     margin: 15px 0;
+    font-size: 14px;
 }
 
 .post-footer{
@@ -343,6 +346,7 @@ a ul li{
     justify-content: flex-start;
     flex-wrap: wrap;
     align-items: flex-start;
+    margin-top: 10px;
     font-size: 14px;
 }
 
@@ -369,6 +373,7 @@ a ul li{
 .message-box>input{
     border: none;
     outline: none;
+    color: aliceblue;
     background-color: transparent;
     width: calc(100% - 25px);
 }
