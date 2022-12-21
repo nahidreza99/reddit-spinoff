@@ -115,6 +115,7 @@ nav{
 }
 
 .main{
+    background-color: #1B1B1B;
     position: absolute;
     top: 70px; /* Header Height */
     bottom: 0px; /* Footer Height */
@@ -122,15 +123,14 @@ nav{
 }
 
 .container{
-    background-color: #1B1B1B;
     height: 100%;
+}
+
+.index{
+    margin-top: 10px;
     display: grid;
     grid-template-columns: 4fr 6fr 4fr;
     column-gap: 10px;
-}
-
-.cont{
-    margin-top: 10px;
 }
 
 .left{
