@@ -7,6 +7,7 @@
     <title>Reddit Mod</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/mainpage.css') }}">
     <script src="https://kit.fontawesome.com/6b6d803fb1.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -16,7 +17,13 @@
             <div class="nav-bar">
                 <ul class="nav-btn flex">
                     <li><a href="#">Display</a></li>
-                    <li><a href="{{loginURL}}">User</a></li>
+                    <li>
+                    {%if reddit.user.me()%}
+                    {{reddit.user.me()}}
+                    {%else%}
+                    <a href="{{loginURL}}">User</a>
+                    {%endif%}
+                    </li>
                     <li><a href="#">Settings</a></li>
                 </ul>
             </div>
@@ -229,137 +236,63 @@
             </div>
             <div class="cont center">
                 <div class="search">
-                    <div class="flex search-container">
-                        <input type="text" placeholder="search reddit..." name="" id="">
-                        <i class="fa-solid fa-magnifying-glass grey"></i>
-                    </div>
+                   <!-- HTML code for the search form -->
+<form id="search-form">
+    <label for="query">Search for a subreddit:</label><br>
+    <input type="text" id="query" name="query"><br>
+    <button type="submit">Search</button>
+  </form>
+  
+  <!-- Div element to display the search results -->
+  <div id="results"></div>
                 </div>
                 <div class="scrollpane">
-                    <div class="post-container">
-                        <div class="post-header">
-                            <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                            </a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <a href=""><p class="grey">u/user1</p></a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <p class="grey">1 hour ago</p>
-                        </div>
-                        <div class="post-title bold">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-body grey">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-footer flex">
-                            <div class="vote flex">
-                                <i class="fa-solid fa-arrow-up"></i>
-                                <p>10</p>
-                                <i class="fa-solid fa-arrow-down"></i>
-                            </div>
-                            <div class="comment flex">
-                                <p class="grey bold">9 comments</p>
-                                <i class="fa-solid fa-ellipsis-vertical grey"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="post-container">
-                        <div class="post-header">
-                            <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                            </a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <a href=""><p class="grey">u/user1</p></a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <p class="grey">1 hour ago</p>
-                        </div>
-                        <div class="post-title bold">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-body grey">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-footer flex">
-                            <div class="vote flex">
-                                <i class="fa-solid fa-arrow-up"></i>
-                                <p>10</p>
-                                <i class="fa-solid fa-arrow-down"></i>
-                            </div>
-                            <div class="comment flex">
-                                <p class="grey bold">9 comments</p>
-                                <i class="fa-solid fa-ellipsis-vertical grey"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="post-container">
-                        <div class="post-header">
-                            <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                            </a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <a href=""><p class="grey">u/user1</p></a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <p class="grey">1 hour ago</p>
-                        </div>
-                        <div class="post-title bold">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-body grey">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-footer flex">
-                            <div class="vote flex">
-                                <i class="fa-solid fa-arrow-up"></i>
-                                <p>10</p>
-                                <i class="fa-solid fa-arrow-down"></i>
-                            </div>
-                            <div class="comment flex">
-                                <p class="grey bold">9 comments</p>
-                                <i class="fa-solid fa-ellipsis-vertical grey"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="post-container">
-                        <div class="post-header">
-                            <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                            </a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <a href=""><p class="grey">u/user1</p></a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <p class="grey">1 hour ago</p>
-                        </div>
-                        <div class="post-title bold">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-body grey">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-footer flex">
-                            <div class="vote flex">
-                                <i class="fa-solid fa-arrow-up"></i>
-                                <p>10</p>
-                                <i class="fa-solid fa-arrow-down"></i>
-                            </div>
-                            <div class="comment flex">
-                                <p class="grey bold">9 comments</p>
-                                <i class="fa-solid fa-ellipsis-vertical grey"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="post-container">
-                        <div class="post-header">
-                            <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                            </a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <a href=""><p class="grey">u/user1</p></a>
-                            <i class="fa-solid fa-circle bullet grey"></i>
-                            <p class="grey">1 hour ago</p>
-                        </div>
-                        <div class="post-title bold">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-body grey">My kids decorated the gingerbread house on their own this year. “Grandma got eaten by the dog” They say they will “up the crime scene every year”</div>
-                        <div class="post-footer flex">
-                            <div class="vote flex">
-                                <i class="fa-solid fa-arrow-up"></i>
-                                <p>10</p>
-                                <i class="fa-solid fa-arrow-down"></i>
-                            </div>
-                            <div class="comment flex">
-                                <p class="grey bold">9 comments</p>
-                                <i class="fa-solid fa-ellipsis-vertical grey"></i>
-                            </div>
-                        </div>
-                    </div>
+{% for post in reddit.front.new(limit=5)%}
+
+<div class="post-container">
+    <div class="post-header">
+        <a class="clickable flex" href="">
+                <i class="fa-brands fa-reddit-alien"></i>
+                <p>{{post.subreddit}}</p>
+        </a>
+        <i class="fa-solid fa-circle bullet grey"></i>
+        <a href=""><p class="grey">u/{{post.author}}</p></a>
+        <i class="fa-solid fa-circle bullet grey"></i>
+        <p class="grey">1 hour ago</p>
+    </div>
+    <div class="post-title bold">{{post.title}}</div>
+    {%if post.selftext%}
+    <div class="post-body grey">{{post.selftext}}</div>
+    {%endif%}
+   
+    {%if post.is_video%}
+    <div class="post-body grey"> <iframe width="400" height="300"
+        src="{{post.media['reddit_video']['fallback_url']}}">
+        </iframe> 
+    </div>
+    {%else%}
+    {%if post.thumbnail %}
+    <div class="post-body grey"><img src="{{post.thumbnail}}" alt="" height="300px" width="400px "></div>
+    {%endif%}
+    {%endif%}
+    <div class="post-footer flex">
+        <div class="vote flex">
+            <i class="fa-solid fa-arrow-up"></i>
+            <p>10</p>
+            <i class="fa-solid fa-arrow-down"></i>
+        </div>
+        <div class="comment flex">
+            <p class="grey bold">9 comments</p>
+            <i class="fa-solid fa-ellipsis-vertical grey"></i>
+        </div>
+    </div>
+</div>
+
+{%endfor%}
+        
+
+                 
+
                 </div>
             </div>
             <div class="cont right">
@@ -482,5 +415,71 @@
         </div>
     </main>
     <footer></footer>
+     
+  <!-- JavaScript code to handle the search form submission and display the results -->
+  <script>
+    // Import the PRAW module
+  
+    // Create a Reddit instance
+
+  
+    // Get the search form and the results div
+    const searchForm = document.getElementById('search-form');
+    const resultsDiv = document.getElementById('results');
+  
+    // Add an event listener to the search form to handle form submissions
+    searchForm.addEventListener('submit', (event) => {
+      // Prevent the form from submitting
+      event.preventDefault();
+  
+      // Get the search query from the form
+      const query = document.getElementById('query').value;
+  
+      // Search for subreddits using PRAW
+      //const redditjs = JSON.parse(redditjson);
+      const xhr = new XMLHttpRequest();
+   
+      xhr.open('POST', '/api/search-subreddits', true);
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.onload = () => {
+  if (xhr.status === 200) {
+    // Parse the response from the server
+    const response = JSON.parse(xhr.responseText);
+
+    // Clear the results div
+    resultsDiv.innerHTML = '';
+
+    // Display the results
+    response.subreddit_name.forEach((name) => {
+      const p = document.createElement('p');
+      p.innerText = name;
+      resultsDiv.appendChild(p);
+    });
+  } else {
+    // Display an error message if the request fails
+    resultsDiv.innerHTML = 'An error occurred';
+  }
+  
+
+
+
+
+
+};
+xhr.send(`query=${query}`);
+//$('#results').slideDown();
+   
+   
+   
+   
+   
+   
+      
+    });
+  </script>
 </body>
 </html>
+
+
+ 
+  
