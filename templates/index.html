@@ -247,7 +247,7 @@
   <div id="results"></div>
                 </div>
                 <div class="scrollpane">
-{% for post in reddit.front.new(limit=5)%}
+{% for post in reddit.front.new(limit=20)%}
 
 <div class="post-container">
     <div class="post-header">
@@ -261,19 +261,17 @@
         <p class="grey">1 hour ago</p>
     </div>
     <div class="post-title bold">{{post.title}}</div>
-    {%if post.selftext%}
+    {%if post.is_self%}
     <div class="post-body grey">{{post.selftext}}</div>
-    {%endif%}
-   
-    {%if post.is_video%}
+    {%elif post.is_video%}
     <div class="post-body grey"> <iframe width="400" height="300"
         src="{{post.media['reddit_video']['fallback_url']}}">
         </iframe> 
     </div>
     {%else%}
-    {%if post.thumbnail %}
-    <div class="post-body grey"><img src="{{post.thumbnail}}" alt="" height="300px" width="400px "></div>
-    {%endif%}
+        {% if post.thumbnail != 'default'%}
+        <div class="post-body grey"><img src="{{post.thumbnail}}" alt="" height="300px" width="400px "></div>
+        {%endif%}
     {%endif%}
     <div class="post-footer flex">
         <div class="vote flex">
