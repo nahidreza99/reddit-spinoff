@@ -25,7 +25,7 @@ def authorize():
 def home():
     
     loginURL = reddit.auth.url(scopes=["*"], state="...", duration="permanent")
-    
+
     return render_template('index.html', **locals())
 
 

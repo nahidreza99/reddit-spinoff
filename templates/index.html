@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/mainpage.css') }}">
     <script src="https://kit.fontawesome.com/6b6d803fb1.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://hls-js-7b2d34bd-841e-4b02-a50a-7a24e015acb7.netlify.com/dist/hls.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -247,7 +248,10 @@
   <div id="results"></div>
                 </div>
                 <div class="scrollpane">
-{% for post in reddit.front.new(limit=20)%}
+    <script>var video_url = new Object()
+            var video_count = 0
+    </script>
+{% for post in reddit.front.new(limit=50)%}
 
 <div class="post-container">
     <div class="post-header">
@@ -264,13 +268,19 @@
     {%if post.is_self%}
     <div class="post-body grey">{{post.selftext}}</div>
     {%elif post.is_video%}
-    <div class="post-body grey"> <iframe width="400" height="300"
-        src="{{post.media['reddit_video']['fallback_url']}}">
-        </iframe> 
+    <div class="post-body grey">
+        <meta id="my-data-{{post.name}}" data-name="{{post.media['reddit_video']['hls_url']}}">
+        <video muted="muted" width="400" autoplay="false" playsinline controls id="{{post.name}}" controls></video>
+        <script>
+            video_url['{{post.name}}'] = $('#my-data-{{post.name}}').data().name;
+            video_count += 1;
+            </script>
     </div>
     {%else%}
         {% if post.thumbnail != 'default'%}
-        <div class="post-body grey"><img src="{{post.url}}" alt="" width="400px" ></div>
+        <div class="post-body grey"><img src="{{post.url}}" alt="" width="600px" >
+        <p>{{post.url}}</p>
+        </div>
         {%endif%}
     {%endif%}
     <div class="post-footer flex">
@@ -289,7 +299,30 @@
 {%endfor%}
         
 
-                 
+<script>
+            if(Hls.isSupported()) {
+                for (const [key, value] of Object.entries(video_url)) {
+                    var video = document.getElementById(key);
+              var hls = new Hls();
+                //quelle = 'http://linux-app.tv:6204/live/21164920/31520888/23808.m3u8';
+                hls.loadSource(value);
+                
+              hls.attachMedia(video);
+              hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                video.play();
+            });
+                }
+           }
+           // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+           // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+           // This is using the built-in support of the plain video element, without using hls.js.
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+              video.src = '';
+              video.addEventListener('canplay',function() {
+                video.play();
+              });
+            }
+          </script>
 
                 </div>
             </div>
