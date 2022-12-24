@@ -288,9 +288,9 @@
                     {%elif post.is_video%}
                     <div class="post-body grey">
                         <meta id="my-data-{{post.name}}" data-name="{{post.media['reddit_video']['hls_url']}}">
-                        <video muted="muted" width="400" autoplay="false" playsinline controls id="{{post.name}}" controls></video>
+                        <video muted="muted" width="400" autoplay="false" playsinline controls id="video-{{post.name}}" controls></video>
                         <script>
-                            video_url['{{post.name}}'] = $('#my-data-{{post.name}}').data().name;
+                            video_url['video-{{post.name}}'] = $('#my-data-{{post.name}}').data().name;
                             </script>
                     </div>
                     {%else%}
@@ -315,28 +315,29 @@
                 {%endfor%}
                 <!--load the videos on the video posts-->
                 <script>
-                        if(Hls.isSupported()) {
-                            for (const [key, value] of Object.entries(video_url)) {
-                                var video = document.getElementById(key);
-                            var hls = new Hls();
-                                hls.loadSource(value);
-                                
-                            hls.attachMedia(video);
-                            hls.on(Hls.Events.MANIFEST_PARSED,function() {
-                                video.play();
-                            });
-                            }
+                    if(Hls.isSupported()) {
+                        for (const [key, value] of Object.entries(video_url)) {
+                            var video = document.getElementById(key);
+                      var hls = new Hls();
+                        //quelle = 'http://linux-app.tv:6204/live/21164920/31520888/23808.m3u8';
+                        hls.loadSource(value);
+                        
+                      hls.attachMedia(video);
+                      hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                        video.play();
+                    });
                         }
-                        // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
-                        // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
-                        // This is using the built-in support of the plain video element, without using hls.js.
-                        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                            video.src = '';
-                            video.addEventListener('canplay',function() {
-                                video.play();
-                            });
-                        }
-                        </script>
+                   }
+                   // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+                   // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+                   // This is using the built-in support of the plain video element, without using hls.js.
+                    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                      video.src = '';
+                      video.addEventListener('canplay',function() {
+                        video.play();
+                      });
+                    }
+                  </script>
 
                 </div>
             </div>
