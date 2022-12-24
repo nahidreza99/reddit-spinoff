@@ -237,92 +237,106 @@
             </div>
             <div class="cont center">
                 <div class="search">
-                   <!-- HTML code for the search form -->
-<form id="search-form">
-    <label for="query">Search for a subreddit:</label><br>
-    <input type="text" id="query" name="query"><br>
-    <button type="submit">Search</button>
-  </form>
+                    <!-- HTML code for the search form -->
+                    <form id="search-form">
+                        <label for="query">Search for a subreddit:</label><br>
+                        <input type="text" id="query" name="query"><br>
+                        <button type="submit">Search</button>
+                    </form>
   
-  <!-- Div element to display the search results -->
-  <div id="results"></div>
+                    <!-- Div element to display the search results -->
+                    <div id="results"></div>
                 </div>
                 <div class="scrollpane">
-    <script>var video_url = new Object()
-            var video_count = 0
-    </script>
-{% for post in reddit.front.new(limit=50)%}
-
-<div class="post-container">
-    <div class="post-header">
-        <a class="clickable flex" href="">
-                <i class="fa-brands fa-reddit-alien"></i>
-                <p>{{post.subreddit}}</p>
-        </a>
-        <i class="fa-solid fa-circle bullet grey"></i>
-        <a href=""><p class="grey">u/{{post.author}}</p></a>
-        <i class="fa-solid fa-circle bullet grey"></i>
-        <p class="grey">1 hour ago</p>
-    </div>
-    <div class="post-title bold">{{post.title}}</div>
-    {%if post.is_self%}
-    <div class="post-body grey">{{post.selftext}}</div>
-    {%elif post.is_video%}
-    <div class="post-body grey">
-        <meta id="my-data-{{post.name}}" data-name="{{post.media['reddit_video']['hls_url']}}">
-        <video muted="muted" width="400" autoplay="false" playsinline controls id="{{post.name}}" controls></video>
-        <script>
-            video_url['{{post.name}}'] = $('#my-data-{{post.name}}').data().name;
-            video_count += 1;
-            </script>
-    </div>
-    {%else%}
-        {% if post.thumbnail != 'default'%}
-        <div class="post-body grey"><img src="{{post.url}}" alt="" width="600px" >
-        <p>{{post.url}}</p>
-        </div>
-        {%endif%}
-    {%endif%}
-    <div class="post-footer flex">
-        <div class="vote flex">
-            <i class="fa-solid fa-arrow-up"></i>
-            <p>10</p>
-            <i class="fa-solid fa-arrow-down"></i>
-        </div>
-        <div class="comment flex">
-            <p class="grey bold">9 comments</p>
-            <i class="fa-solid fa-ellipsis-vertical grey"></i>
-        </div>
-    </div>
-</div>
-
-{%endfor%}
-        
-
-<script>
-            if(Hls.isSupported()) {
-                for (const [key, value] of Object.entries(video_url)) {
-                    var video = document.getElementById(key);
-              var hls = new Hls();
-                //quelle = 'http://linux-app.tv:6204/live/21164920/31520888/23808.m3u8';
-                hls.loadSource(value);
-                
-              hls.attachMedia(video);
-              hls.on(Hls.Events.MANIFEST_PARSED,function() {
-                video.play();
-            });
-                }
-           }
-           // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
-           // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
-           // This is using the built-in support of the plain video element, without using hls.js.
-            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-              video.src = '';
-              video.addEventListener('canplay',function() {
-                video.play();
-              });
-            }
-          </script>
+                <script>var video_url = new Object()
+                </script>
+                {% for post in reddit.front.new(limit=50)%}
+                <div class="post-container" id="{{post.name}}">
+                    <div class="post-header">
+                        <a class="clickable flex" href="">
+                                <i class="fa-brands fa-reddit-alien"></i>
+                                <p>{{post.subreddit}}</p>
+                        </a>
+                        <i class="fa-solid fa-circle bullet grey"></i>
+                        <a href=""><p class="grey">u/{{post.author}}</p></a>
+                        <i class="fa-solid fa-circle bullet grey"></i>
+                        <meta id="my-time-{{post.name}}" data-name="{{post.created_utc}}">
+                        <p class="created grey" id="created-{{post.name}}"></p>
+                        <script>
+                            var secondsSinceEpoch = Math.round(Date.now() / 1000);
+                            var postTime = secondsSinceEpoch - parseInt($('#my-time-{{post.name}}').data().name.toString());
+                            var post = document.getElementById('created-{{post.name}}');
+                            if(postTime < 60){
+                                var text = document.createTextNode(postTime + "s ago");
+                                post.appendChild(text);
+                            }
+                            else if(postTime/60 < 60){
+                                postTime = parseInt(postTime / 60);
+                                var text = document.createTextNode(postTime+"m ago");
+                                post.appendChild(text);
+                            }
+                            else{
+                                postTime = parseInt(postTime/3600);
+                                var text = document.createTextNode(postTime+"d ago");
+                                post.appendChild(text);
+                            }
+                        </script>
+                    </div>
+                    <div class="post-title bold">{{post.title}}</div>
+                    {%if post.is_self%}
+                    <div class="post-body grey">{{post.selftext}}</div>
+                    {%elif post.is_video%}
+                    <div class="post-body grey">
+                        <meta id="my-data-{{post.name}}" data-name="{{post.media['reddit_video']['hls_url']}}">
+                        <video muted="muted" width="400" autoplay="false" playsinline controls id="{{post.name}}" controls></video>
+                        <script>
+                            video_url['{{post.name}}'] = $('#my-data-{{post.name}}').data().name;
+                            </script>
+                    </div>
+                    {%else%}
+                        {% if post.thumbnail != 'default'%}
+                        <div class="post-body grey"><img src="{{post.url}}" alt="" width="600px" >
+                        <p>{{post.url}}</p>
+                        </div>
+                        {%endif%}
+                    {%endif%}
+                    <div class="post-footer flex">
+                        <div class="vote flex">
+                            <i class="fa-solid fa-arrow-up"></i>
+                            <p>10</p>
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </div>
+                        <div class="comment flex">
+                            <p class="grey bold">9 comments</p>
+                            <i class="fa-solid fa-ellipsis-vertical grey"></i>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+                <!--load the videos on the video posts-->
+                <script>
+                        if(Hls.isSupported()) {
+                            for (const [key, value] of Object.entries(video_url)) {
+                                var video = document.getElementById(key);
+                            var hls = new Hls();
+                                hls.loadSource(value);
+                                
+                            hls.attachMedia(video);
+                            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                                video.play();
+                            });
+                            }
+                        }
+                        // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+                        // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+                        // This is using the built-in support of the plain video element, without using hls.js.
+                        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                            video.src = '';
+                            video.addEventListener('canplay',function() {
+                                video.play();
+                            });
+                        }
+                        </script>
 
                 </div>
             </div>
