@@ -248,7 +248,9 @@
                     <div id="results"></div>
                 </div>
                 <div class="scrollpane">
-                <script>var video_url = new Object()
+                <script>var video_url = new Object();
+                        var indexes = new Object();
+                        var galleries = [];
                 </script>
                 {% for i, submission in get_submission() %}
                 <div class="post-container" id="{{i}}">
@@ -297,37 +299,28 @@
                         {%else%}
                         <div class="post-body grey"><img src="{{submission.url}}" alt="" width="400px" ></div>
                         {%endif%}
-                    <script>
-                        const container = document.querySelector('#{{i}}.slider-container');
-                        const slides = document.querySelectorAll('#{{i}}.slider-container.slider-image');
-                        const buttons = document.querySelectorAll('#{{i}}.slider-container.slider-button');
-
-                        let currentSlide = 0;
-
-                        function goToSlide(n) {
-                        slides[currentSlide].style.display = 'none';
-                        currentSlide = (n + slides.length) % slides.length;
-                        slides[currentSlide].style.display = 'block';
-
-                        document.getElementById('prev-{{i}}').addEventListener('click', function() {
-                        goToSlide(currentSlide - 1);
-                        });
-
-                        document.getElementById('next-{{i}}').addEventListener('click', function() {
-                        goToSlide(currentSlide + 1);
-                        });
-
-                        goToSlide(0);
-                        }
-                        // Set the left property of the container to the negative value of the current index times the width of
-                    </script>
                     {% elif check_gallery(submission) %}
-                    <div class="slider-container">
-                        {% for u in get_urls(submission) %}
-                        <img src="{{u}}" alt="Image" class="slider-image">
+                    <div class="slideshow-container" id="gallery_{{i}}">
+                        <script>
+                            indexes['gallery_{{i}}'] = 1;
+                            galleries.push('gallery_{{i}}');
+                        </script>
+                        <!-- Full-width images with number and caption text -->
+                        {% for k,u in get_urls(submission) %}
+                        <div class="mySlides fade">
+                            <img class="gal_img" src="{{u}}" style="width:400px">
+                        </div>
                         {%endfor%}
-                        <button class="prev-{{i}}" data-direction="prev">Previous</button>
-                        <button id="next-{{i}}" data-direction="next">Next</button>
+                        <!-- Next and previous buttons -->
+                        <a class="prev" onclick="plusSlides(-1, 'gallery_{{i}}', 'gallery_{{i}}')">&#10094;</a>
+                        <a class="next" onclick="plusSlides(1, 'gallery_{{i}}', 'gallery_{{i}}')">&#10095;</a>
+                        <br />
+                        <!-- The dots/circles -->
+                        <div style="text-align:center">
+                            {% for k,u in get_urls(submission) %}
+                            <span class="dot" onclick="currentSlide('{{k+1}}', 'gallery_{{i}}', 'gallery_{{i}}')"></span>
+                            {%endfor%}
+                        </div>
                     </div>
                     {%else%}
                     <div class="post-body grey">
@@ -349,27 +342,59 @@
                 {%endfor%}
                 <!--load the videos on the video posts-->
                 <script>
+                    for (id of galleries){
+                        showSlides(indexes.id, id, id);
+                    }
+                    
+                    // Next/previous controls
+                    function plusSlides(n, id, index) { // n - number of slide, id - container id, index - current slide number in slider
+                        showSlides(indexes[index] += n, id, index);
+                    }
+                    // Thumbnail image controls
+                    function currentSlide(n, id, index) {
+                        showSlides(indexes[index] = n, id, index);
+                    }
+                
+                    function showSlides(n, id, index) {
+                        var i;
+                        var slides = document.querySelectorAll(`#${id} .mySlides`);
+                        var dots = document.querySelectorAll(`#${id} .dot`);
+                        if (n > slides.length) {
+                            indexes[index] = 1;
+                        }
+                        if (n < 1) {indexes[index] = slides.length}
+                        for (i = 0; i < slides.length; i++) {
+                            slides[i].style.display = "none";
+                        }
+                        for (i = 0; i < dots.length; i++) {
+                            dots[i].className = dots[i].className.replace(" active", "");
+                        }
+                        slides[indexes[index]-1].style.display = "block";
+                        dots[indexes[index]-1].className += " active";
+                    }
+                </script>
+                <script>
                     if(Hls.isSupported()) {
                         for (const [key, value] of Object.entries(video_url)) {
                             var video = document.getElementById(key);
-                      var hls = new Hls();
-                        //quelle = 'http://linux-app.tv:6204/live/21164920/31520888/23808.m3u8';
-                        hls.loadSource(value);
-                        
-                      hls.attachMedia(video);
-                      hls.on(Hls.Events.MANIFEST_PARSED,function() {
-                        video.play();
-                    });
+                            var hls = new Hls();
+                            //quelle = 'http://linux-app.tv:6204/live/21164920/31520888/23808.m3u8';
+                            hls.loadSource(value);
+                            
+                            hls.attachMedia(video);
+                            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                                video.play();
+                            });
                         }
-                   }
+                    }
                    // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
                    // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
                    // This is using the built-in support of the plain video element, without using hls.js.
                     else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                      video.src = '';
-                      video.addEventListener('canplay',function() {
+                        video.src = '';
+                        video.addEventListener('canplay',function() {
                         video.play();
-                      });
+                        });
                     }
                   </script>
 

@@ -59,7 +59,7 @@ def get_urls(submission):
     gal = []
     for img_itm in submission.media_metadata:
         gal.append(str(submission.media_metadata[img_itm]['s']['u']))
-    return gal
+    return enumerate(gal)
 
 def get_submission():
     all_id = [submission.id for submission in reddit.front.new(limit=20)]
@@ -73,7 +73,6 @@ if __name__ == "__main__":
     app.run(debug=True)
 app.jinja_env.globals.update(check_gallery=check_gallery)
 app.jinja_env.globals.update(get_urls=get_urls)
-
 app.jinja_env.globals.update(get_submission=get_submission)
 app.jinja_env.globals.update(get_video=get_video)
 
