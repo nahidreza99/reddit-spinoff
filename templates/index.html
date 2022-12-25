@@ -250,7 +250,7 @@
                 <div class="scrollpane">
                 <script>var video_url = new Object()
                 </script>
-                {% for post in reddit.front.new(limit=50)%}
+                {% for post in posts %}
                 <div class="post-container" id="{{post.name}}">
                     <div class="post-header">
                         <a class="clickable flex" href="">
@@ -258,7 +258,7 @@
                                 <p>{{post.subreddit}}</p>
                         </a>
                         <i class="fa-solid fa-circle bullet grey"></i>
-                        <a href=""><p class="grey">u/{{post.author}}</p></a>
+                        <a href=""><p class="grey">{{post.user}}</p></a>
                         <i class="fa-solid fa-circle bullet grey"></i>
                         <meta id="my-time-{{post.name}}" data-name="{{post.created_utc}}">
                         <p class="created grey" id="created-{{post.name}}"></p>
@@ -283,22 +283,54 @@
                         </script>
                     </div>
                     <div class="post-title bold">{{post.title}}</div>
-                    {%if post.is_self%}
+                    {%if post.type == 'self' %}
                     <div class="post-body grey">{{post.selftext}}</div>
-                    {%elif post.is_video%}
+                    {%elif post.type == 'video' %}
                     <div class="post-body grey">
-                        <meta id="my-data-{{post.name}}" data-name="{{post.media['reddit_video']['hls_url']}}">
+                        <meta id="my-data-{{post.name}}" data-name="{{post.url}}">
                         <video muted="muted" width="400" autoplay="false" playsinline controls id="video-{{post.name}}" controls></video>
                         <script>
                             video_url['video-{{post.name}}'] = $('#my-data-{{post.name}}').data().name;
                             </script>
                     </div>
+                    {%elif post.type == 'image' %}
+                    <div class="post-body grey"><img src="{{post.url}}" alt="" width="600px" ></div>
+                    {% elif post.type == 'gallery' %}
+                    <div class="slider-container">
+                        {% for u in post.gallery %}
+                        <img src="{{u}}" alt="Image" class="slider-image">
+                        {%endfor%}
+                        <button class="prev-{{post.name}}" data-direction="prev">Previous</button>
+                        <button id="next-{{post.name}}" data-direction="next">Next</button>
+                    </div>
+                    <script>
+                        const container = document.querySelector('#{{post.name}}.slider-container');
+                        const slides = document.querySelectorAll('#{{post.name}}.slider-container.slider-image');
+                        const buttons = document.querySelectorAll('#{{post.name}}.slider-container.slider-button');
+
+                        let currentSlide = 0;
+
+                        function goToSlide(n) {
+                        slides[currentSlide].style.display = 'none';
+                        currentSlide = (n + slides.length) % slides.length;
+                        slides[currentSlide].style.display = 'block';
+
+                        document.getElementById('prev-{{post.name}}').addEventListener('click', function() {
+                        goToSlide(currentSlide - 1);
+                        });
+
+                        document.getElementById('next-{{post.name}}').addEventListener('click', function() {
+                        goToSlide(currentSlide + 1);
+                        });
+
+                        goToSlide(0);
+                        }
+                        // Set the left property of the container to the negative value of the current index times the width of
+                    </script>
                     {%else%}
-                        {% if post.thumbnail != 'default'%}
-                        <div class="post-body grey"><img src="{{post.url}}" alt="" width="600px" >
-                        <p>{{post.url}}</p>
-                        </div>
-                        {%endif%}
+                    <div class="post-body grey">
+                        <p>Meta Item</p>
+                    </div>
                     {%endif%}
                     <div class="post-footer flex">
                         <div class="vote flex">
@@ -466,66 +498,54 @@
   <script>
     // Import the PRAW module
   
-    // Create a Reddit instance
+  // Create a Reddit instance
 
-  
-    // Get the search form and the results div
-    const searchForm = document.getElementById('search-form');
-    const resultsDiv = document.getElementById('results');
-  
-    // Add an event listener to the search form to handle form submissions
-    searchForm.addEventListener('submit', (event) => {
-      // Prevent the form from submitting
-      event.preventDefault();
-  
-      // Get the search query from the form
-      const query = document.getElementById('query').value;
-  
-      // Search for subreddits using PRAW
-      //const redditjs = JSON.parse(redditjson);
-      const xhr = new XMLHttpRequest();
-   
-      xhr.open('POST', '/api/search-subreddits', true);
+  // Get the search form and the results div
+  const searchForm = document.getElementById('search-form');
+  const resultsDiv = document.getElementById('results');
+
+  // Add an event listener to the search form to handle form submissions
+  searchForm.addEventListener('submit', (event) => {
+    // Prevent the form from submitting
+    event.preventDefault();
+
+    // Get the search query from the form
+    const query = document.getElementById('query').value;
+
+    // Search for subreddits using PRAW
+    //const redditjs = JSON.parse(redditjson);
+    const xhr = new XMLHttpRequest();
+ 
+    xhr.open('POST', '/api/search-subreddits', true);
 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onload = () => {
-  if (xhr.status === 200) {
-    // Parse the response from the server
-    const response = JSON.parse(xhr.responseText);
-
-    // Clear the results div
-    resultsDiv.innerHTML = '';
-
-    // Display the results
-    response.subreddit_name.forEach((name) => {
-      const p = document.createElement('p');
-      p.innerText = name;
-      resultsDiv.appendChild(p);
-    });
-  } else {
-    // Display an error message if the request fails
-    resultsDiv.innerHTML = 'An error occurred';
-  }
-  
-
-
-
-
+if (xhr.status === 200) {
+  // Parse the response from the server
+  const response = JSON.parse(xhr.responseText);
+  // Clear the results div
+  resultsDiv.innerHTML = '';
+  // Display the results
+  response.subreddit_name.forEach((name) => {
+    const p = document.createElement('p');
+    p.innerText = name;
+    resultsDiv.appendChild(p);
+  });
+} else {
+  // Display an error message if the request fails
+  resultsDiv.innerHTML = 'An error occurred';
+}
 
 };
 xhr.send(`query=${query}`);
 //$('#results').slideDown();
-   
-   
-   
-   
-   
-   
-      
-    });
+ 
+ 
+ 
+ 
+ 
+ 
+    
+  });
   </script>
 </body>
 </html>
-
-
- 
-  

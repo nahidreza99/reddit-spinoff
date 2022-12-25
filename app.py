@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template,redirect,url_for,jsonify
+from flask import Flask, request, render_template,redirect,url_for,jsonify, session
 import datetime
 import requests
 import praw ,json
@@ -24,8 +24,43 @@ def authorize():
 
 @app.route("/")
 def home():
-    
     loginURL = reddit.auth.url(scopes=["*"], state="...", duration="permanent")
+    
+    posts = []
+    i = 1
+    for submission in reddit.front.new(limit=20):
+        post = {}
+        post['subreddit'] = str(submission.subreddit)
+        post['user'] = str('u/'+str(submission.author))
+        post['name'] = submission.name
+        post['created_utc'] = submission.created_utc
+        post['title'] = submission.title
+        if submission.is_self:
+            print(i,': self')
+            post['type'] = 'self'
+            post['selftext'] = submission.selftext
+        elif hasattr(submission, 'is_gallery'):
+                print(i,': gallery')
+                post['type'] = 'gallery'
+                gal = []
+                for img_itm in submission.media_metadata:
+                    gal.append(str(submission.media_metadata[img_itm]['s']['u']))
+                print(gal)
+                post['gallery'] = gal
+        elif submission.is_reddit_media_domain:
+            if(submission.is_video):
+                print(i,':video')
+                post['type'] = 'video'
+                post['url'] = submission.media['reddit_video']['hls_url']
+            else:
+                print(i,': image')
+                post['type'] = 'image'
+                post['url'] = submission.url
+        else:
+            print(i)
+            post['type'] = 'meta'
+        i+=1
+        posts.append(post)
 
     return render_template('index.html', **locals())
 

@@ -432,3 +432,30 @@ a ul li{
     align-items: center;
     border-radius: inherit;
 }
+
+
+
+.slider-container {
+    position: relative;
+  }
+  
+  .slider-image {
+    width: 600px;
+    object-fit: cover;
+  }
+  
+  .slider-button {
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .slider-button[data-direction="prev"] {
+    left: 10px;
+  }
+  
+  .slider-button[data-direction="next"] {
+    right: 10px;
+  }
