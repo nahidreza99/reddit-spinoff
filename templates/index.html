@@ -250,22 +250,22 @@
                 <div class="scrollpane">
                 <script>var video_url = new Object()
                 </script>
-                {% for post in posts %}
-                <div class="post-container" id="{{post.name}}">
+                {% for i, submission in get_submission() %}
+                <div class="post-container" id="{{i}}">
                     <div class="post-header">
                         <a class="clickable flex" href="">
                                 <i class="fa-brands fa-reddit-alien"></i>
-                                <p>{{post.subreddit}}</p>
+                                <p>{{submission.subreddit}}</p>
                         </a>
                         <i class="fa-solid fa-circle bullet grey"></i>
-                        <a href=""><p class="grey">{{post.user}}</p></a>
+                        <a href=""><p class="grey">{{submission.author}}</p></a>
                         <i class="fa-solid fa-circle bullet grey"></i>
-                        <meta id="my-time-{{post.name}}" data-name="{{post.created_utc}}">
-                        <p class="created grey" id="created-{{post.name}}"></p>
+                        <meta id="my-time-{{i}}" data-name="{{submission.created_utc}}">
+                        <p class="created grey" id="created-{{i}}"></p>
                         <script>
                             var secondsSinceEpoch = Math.round(Date.now() / 1000);
-                            var postTime = secondsSinceEpoch - parseInt($('#my-time-{{post.name}}').data().name.toString());
-                            var post = document.getElementById('created-{{post.name}}');
+                            var postTime = secondsSinceEpoch - parseInt($('#my-time-{{i}}').data().name.toString());
+                            var post = document.getElementById('created-{{i}}');
                             if(postTime < 60){
                                 var text = document.createTextNode(postTime + "s ago");
                                 post.appendChild(text);
@@ -282,31 +282,25 @@
                             }
                         </script>
                     </div>
-                    <div class="post-title bold">{{post.title}}</div>
-                    {%if post.type == 'self' %}
-                    <div class="post-body grey">{{post.selftext}}</div>
-                    {%elif post.type == 'video' %}
-                    <div class="post-body grey">
-                        <meta id="my-data-{{post.name}}" data-name="{{post.url}}">
-                        <video muted="muted" width="400" autoplay="false" playsinline controls id="video-{{post.name}}" controls></video>
-                        <script>
-                            video_url['video-{{post.name}}'] = $('#my-data-{{post.name}}').data().name;
-                            </script>
-                    </div>
-                    {%elif post.type == 'image' %}
-                    <div class="post-body grey"><img src="{{post.url}}" alt="" width="600px" ></div>
-                    {% elif post.type == 'gallery' %}
-                    <div class="slider-container">
-                        {% for u in post.gallery %}
-                        <img src="{{u}}" alt="Image" class="slider-image">
-                        {%endfor%}
-                        <button class="prev-{{post.name}}" data-direction="prev">Previous</button>
-                        <button id="next-{{post.name}}" data-direction="next">Next</button>
-                    </div>
+                    <div class="post-title bold">{{submission.title}}</div>
+                    {%if submission.is_self %}
+                    <div class="post-body grey">{{submission.selftext}}</div>
+                    {%elif submission.is_reddit_media_domain %}
+                        {%if submission.is_video %}
+                        <div class="post-body grey">
+                            <meta id="my-data-{{i}}" data-name="{{get_video(submission)}}">
+                            <video muted="muted" width="400" autoplay="false" playsinline controls id="video-{{i}}" controls></video>
+                            <script>
+                                video_url['video-{{i}}'] = $('#my-data-{{i}}').data().name;
+                                </script>
+                        </div>
+                        {%else%}
+                        <div class="post-body grey"><img src="{{submission.url}}" alt="" width="400px" ></div>
+                        {%endif%}
                     <script>
-                        const container = document.querySelector('#{{post.name}}.slider-container');
-                        const slides = document.querySelectorAll('#{{post.name}}.slider-container.slider-image');
-                        const buttons = document.querySelectorAll('#{{post.name}}.slider-container.slider-button');
+                        const container = document.querySelector('#{{i}}.slider-container');
+                        const slides = document.querySelectorAll('#{{i}}.slider-container.slider-image');
+                        const buttons = document.querySelectorAll('#{{i}}.slider-container.slider-button');
 
                         let currentSlide = 0;
 
@@ -315,11 +309,11 @@
                         currentSlide = (n + slides.length) % slides.length;
                         slides[currentSlide].style.display = 'block';
 
-                        document.getElementById('prev-{{post.name}}').addEventListener('click', function() {
+                        document.getElementById('prev-{{i}}').addEventListener('click', function() {
                         goToSlide(currentSlide - 1);
                         });
 
-                        document.getElementById('next-{{post.name}}').addEventListener('click', function() {
+                        document.getElementById('next-{{i}}').addEventListener('click', function() {
                         goToSlide(currentSlide + 1);
                         });
 
@@ -327,6 +321,14 @@
                         }
                         // Set the left property of the container to the negative value of the current index times the width of
                     </script>
+                    {% elif check_gallery(submission) %}
+                    <div class="slider-container">
+                        {% for u in get_urls(submission) %}
+                        <img src="{{u}}" alt="Image" class="slider-image">
+                        {%endfor%}
+                        <button class="prev-{{i}}" data-direction="prev">Previous</button>
+                        <button id="next-{{i}}" data-direction="next">Next</button>
+                    </div>
                     {%else%}
                     <div class="post-body grey">
                         <p>Meta Item</p>

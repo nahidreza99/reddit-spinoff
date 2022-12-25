@@ -25,42 +25,6 @@ def authorize():
 @app.route("/")
 def home():
     loginURL = reddit.auth.url(scopes=["*"], state="...", duration="permanent")
-    
-    posts = []
-    i = 1
-    for submission in reddit.front.new(limit=20):
-        post = {}
-        post['subreddit'] = str(submission.subreddit)
-        post['user'] = str('u/'+str(submission.author))
-        post['name'] = submission.name
-        post['created_utc'] = submission.created_utc
-        post['title'] = submission.title
-        if submission.is_self:
-            print(i,': self')
-            post['type'] = 'self'
-            post['selftext'] = submission.selftext
-        elif hasattr(submission, 'is_gallery'):
-                print(i,': gallery')
-                post['type'] = 'gallery'
-                gal = []
-                for img_itm in submission.media_metadata:
-                    gal.append(str(submission.media_metadata[img_itm]['s']['u']))
-                print(gal)
-                post['gallery'] = gal
-        elif submission.is_reddit_media_domain:
-            if(submission.is_video):
-                print(i,':video')
-                post['type'] = 'video'
-                post['url'] = submission.media['reddit_video']['hls_url']
-            else:
-                print(i,': image')
-                post['type'] = 'image'
-                post['url'] = submission.url
-        else:
-            print(i)
-            post['type'] = 'meta'
-        i+=1
-        posts.append(post)
 
     return render_template('index.html', **locals())
 
@@ -85,10 +49,31 @@ def inject_user():
     #json_string = json.dumps(reddit_dict)
     return dict(reddit=reddit)
     
+def check_gallery(submission):
+    if hasattr(submission, 'is_gallery'):
+        return True
+    else:
+        return False
 
+def get_urls(submission):
+    gal = []
+    for img_itm in submission.media_metadata:
+        gal.append(str(submission.media_metadata[img_itm]['s']['u']))
+    return gal
+
+def get_submission():
+    all_id = [submission.id for submission in reddit.front.new(limit=20)]
+    fullnames = [f"t3_{id}" for id in all_id]
+    print(all_id)
+    return enumerate(reddit.info(fullnames=fullnames))
+def get_video(submission):
+    return submission.media['reddit_video']['hls_url']
 
 if __name__ == "__main__":
     app.run(debug=True)
+app.jinja_env.globals.update(check_gallery=check_gallery)
+app.jinja_env.globals.update(get_urls=get_urls)
 
-
+app.jinja_env.globals.update(get_submission=get_submission)
+app.jinja_env.globals.update(get_video=get_video)
 
