@@ -69,10 +69,20 @@ def get_submission():
 def get_video(submission):
     return submission.media['reddit_video']['hls_url']
 
+def check_url(submission):
+    meta_url = submission.url
+    url_split = meta_url.split('/')
+    prefix = url_split[2]
+    if prefix == 'www.reddit.com':
+        return 'reddit'
+    else:
+        return 'others'
+
 if __name__ == "__main__":
     app.run(debug=True)
 app.jinja_env.globals.update(check_gallery=check_gallery)
 app.jinja_env.globals.update(get_urls=get_urls)
 app.jinja_env.globals.update(get_submission=get_submission)
 app.jinja_env.globals.update(get_video=get_video)
+app.jinja_env.globals.update(check_url=check_url)
 
