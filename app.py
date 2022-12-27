@@ -62,21 +62,34 @@ def get_urls(submission):
     return enumerate(gal)
 
 def get_submission():
-    all_id = [submission.id for submission in reddit.front.new(limit=20)]
+    all_id = [submission.id for submission in reddit.front.hot(limit=20)]
     fullnames = [f"t3_{id}" for id in all_id]
     print(all_id)
     return enumerate(reddit.info(fullnames=fullnames))
 def get_video(submission):
     return submission.media['reddit_video']['hls_url']
 
-def check_url(submission):
-    meta_url = submission.url
+def check_url(submission_url):
+    meta_url = submission_url
     url_split = meta_url.split('/')
     prefix = url_split[2]
     if prefix == 'www.reddit.com':
         return 'reddit'
     else:
         return 'others'
+
+def get_upvote(submission):
+    return submission.upvote-submission.downvote
+
+def get_commentsLength(submission):
+    return len(submission.comments)
+
+def curve_vote(vote):
+    if vote>1000:
+        return round(float(vote/1000),1)
+    else:
+        return vote
+
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -85,4 +98,6 @@ app.jinja_env.globals.update(get_urls=get_urls)
 app.jinja_env.globals.update(get_submission=get_submission)
 app.jinja_env.globals.update(get_video=get_video)
 app.jinja_env.globals.update(check_url=check_url)
-
+app.jinja_env.globals.update(get_commentsLength=get_commentsLength)
+app.jinja_env.globals.update(get_upvote=get_upvote)
+app.jinja_env.globals.update(curve_vote=curve_vote)

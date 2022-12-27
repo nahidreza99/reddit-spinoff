@@ -251,6 +251,7 @@
                 <script>var video_url = new Object();
                         var indexes = new Object();
                         var galleries = [];
+                        var secondsSinceEpoch = Math.round(Date.now() / 1000);
                 </script>
                 {% for i, submission in get_submission() %}
                 <div class="post-container" id="{{i}}">
@@ -265,7 +266,6 @@
                         <meta id="my-time-{{i}}" data-name="{{submission.created_utc}}">
                         <p class="created grey" id="created-{{i}}"></p>
                         <script>
-                            var secondsSinceEpoch = Math.round(Date.now() / 1000);
                             var postTime = secondsSinceEpoch - parseInt($('#my-time-{{i}}').data().name.toString());
                             var post = document.getElementById('created-{{i}}');
                             if(postTime < 60){
@@ -277,8 +277,13 @@
                                 var text = document.createTextNode(postTime+"m ago");
                                 post.appendChild(text);
                             }
-                            else{
+                            else if(postTime/3600<24){
                                 postTime = parseInt(postTime/3600);
+                                var text = document.createTextNode(postTime+"h ago");
+                                post.appendChild(text);
+                            }
+                            else{
+                                postTime = parseInt(postTime/86400);
                                 var text = document.createTextNode(postTime+"d ago");
                                 post.appendChild(text);
                             }
@@ -286,10 +291,18 @@
                     </div>
                     <div class="post-title bold">{{submission.title}}</div>
                     {%if submission.is_self %}
-                    <div class="post-body grey">{{submission.selftext}}</div>
+                    <div id="{{i}}-body" class="grey post-body">{{submission.selftext}}
+                        <script>
+                            var element = document.getElementById('{{i}}-body');
+                            var height = element.clientHeight;
+                            if(height>250){
+                                element.className += " post-scroll";
+                            }
+                        </script>
+                    </div>
                     {%elif submission.is_reddit_media_domain %}
                         {%if submission.is_video %}
-                        <div class="post-body grey">
+                        <div class="grey flex-center">
                             <meta id="my-data-{{i}}" data-name="{{get_video(submission)}}">
                             <video muted="muted" width="400" autoplay="false" playsinline controls id="video-{{i}}" controls></video>
                             <script>
@@ -297,10 +310,10 @@
                                 </script>
                         </div>
                         {%else%}
-                        <div class="post-body grey"><img src="{{submission.url}}" alt="" width="400px" ></div>
+                        <div class="grey flex-center"><img src="{{submission.url}}" alt="" width="400px" ></div>
                         {%endif%}
                     {%else%}
-                        {% if check_url(submission) == 'reddit' %}
+                        {% if check_url(submission.url) == 'reddit' %}
                             {% if check_gallery(submission) %}
                             <div class="slideshow-container" id="gallery_{{i}}">
                                 <script>
@@ -334,11 +347,11 @@
                     <div class="post-footer flex">
                         <div class="vote flex">
                             <i class="fa-solid fa-arrow-up"></i>
-                            <p>10</p>
+                            <p>{{curve_vote(submission.score)}}k</p>
                             <i class="fa-solid fa-arrow-down"></i>
                         </div>
                         <div class="comment flex">
-                            <p class="grey bold">9 comments</p>
+                            <p class="grey bold">10 comments</p>
                             <i class="fa-solid fa-ellipsis-vertical grey"></i>
                         </div>
                     </div>

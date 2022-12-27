@@ -75,6 +75,12 @@ p{
     align-items: center;
 }
 
+.flex-center{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 ol, ul {
 	list-style: none;
 }
@@ -141,7 +147,7 @@ nav{
 .center{
     background-color: #000B17;
     border-radius: 10px 10px 0 0;
-    max-width: 750px;
+    max-width: 650px;
 }
 
 .right{
@@ -281,6 +287,12 @@ a ul li{
 .post-body{
     margin: 15px 0;
     font-size: 14px;
+}
+
+.post-scroll{
+    max-height: 250px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .post-footer{
@@ -437,7 +449,14 @@ a ul li{
 
 
 .mySlides {display: none}
-.gal_img {vertical-align: middle;}
+.gal_img {
+    vertical-align: middle;
+    position: relative;
+    margin: 0;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%, 0%);
+}
 
 /* Slideshow container */
 .slideshow-container {
@@ -499,14 +518,14 @@ a ul li{
   height: 15px;
   width: 15px;
   margin: 0 2px;
-  background-color: #bbb;
+  background-color: #717171;
   border-radius: 50%;
   display: inline-block;
   transition: background-color 0.6s ease;
 }
 
 .active_img, .dot:hover {
-  background-color: #717171;
+  background-color: #bbb;
 }
 
 /* Fading animation */
