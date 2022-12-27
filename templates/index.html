@@ -347,7 +347,7 @@
                     <div class="post-footer flex">
                         <div class="vote flex">
                             <i class="fa-solid fa-arrow-up"></i>
-                            <p>{{curve_vote(submission.score)}}k</p>
+                            <p class="bold">{{curve_vote(submission.score)}}k</p>
                             <i class="fa-solid fa-arrow-down"></i>
                         </div>
                         <div class="comment flex">
@@ -362,8 +362,8 @@
             <div class="cont right">
                 <div class="user-info">
                     <div class="avatar">
-                        <i class="fa-solid fa-user"></i>
-                        <p class="bold">u/user1</p>
+                        <img src="{{get_avatar(reddit.user.me())}}" height="100px" alt="">
+                        <p class="bold">u/{{reddit.user.me()}}</p>
                         <div class="online-status flex">
                             <i class="fa-solid fa-circle active"></i>
                             <p class="grey">Online-status: On</p>
@@ -373,7 +373,7 @@
                         <div class="karma flex">
                             <i class="fa-regular fa-snowflake"></i>
                             <div>
-                                <p class="bold">206</p>
+                                <p class="bold">{{get_karma(reddit.user.me())}}</p>
                                 <p class="grey">Karma</p>
                             </div>
                         </div>

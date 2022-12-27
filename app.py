@@ -2,6 +2,8 @@ from flask import Flask, request, render_template,redirect,url_for,jsonify, sess
 import datetime
 import requests
 import praw ,json
+import PIL
+import urllib
 from variables import   obj
 app = Flask(__name__)
 
@@ -62,7 +64,7 @@ def get_urls(submission):
     return enumerate(gal)
 
 def get_submission():
-    all_id = [submission.id for submission in reddit.front.hot(limit=20)]
+    all_id = [submission.id for submission in reddit.front.hot(limit=30)]
     fullnames = [f"t3_{id}" for id in all_id]
     print(all_id)
     return enumerate(reddit.info(fullnames=fullnames))
@@ -90,6 +92,12 @@ def curve_vote(vote):
     else:
         return vote
 
+def get_avatar(redditor):
+    return reddit.redditor(str(redditor)).icon_img
+
+def get_karma(redditor):
+    return reddit.redditor(str(redditor)).comment_karma + reddit.redditor(str(redditor)).link_karma
+
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -101,3 +109,5 @@ app.jinja_env.globals.update(check_url=check_url)
 app.jinja_env.globals.update(get_commentsLength=get_commentsLength)
 app.jinja_env.globals.update(get_upvote=get_upvote)
 app.jinja_env.globals.update(curve_vote=curve_vote)
+app.jinja_env.globals.update(get_avatar=get_avatar)
+app.jinja_env.globals.update(get_karma=get_karma)
