@@ -86,17 +86,20 @@ def get_upvote(submission):
 def get_commentsLength(submission):
     return len(submission.comments)
 
-def curve_vote(vote):
-    if vote>1000:
-        return round(float(vote/1000),1)
+def curve_number(num):
+    if num>1000:
+        return round(float(num/1000),1)
     else:
-        return vote
+        return num
 
 def get_avatar(redditor):
     return reddit.redditor(str(redditor)).icon_img
 
 def get_karma(redditor):
     return reddit.redditor(str(redditor)).comment_karma + reddit.redditor(str(redditor)).link_karma
+
+def get_reddit_age(redditor):
+    return reddit.redditor(str(redditor)).created_utc
 
 
 if __name__ == "__main__":
@@ -108,6 +111,7 @@ app.jinja_env.globals.update(get_video=get_video)
 app.jinja_env.globals.update(check_url=check_url)
 app.jinja_env.globals.update(get_commentsLength=get_commentsLength)
 app.jinja_env.globals.update(get_upvote=get_upvote)
-app.jinja_env.globals.update(curve_vote=curve_vote)
+app.jinja_env.globals.update(curve_number=curve_number)
 app.jinja_env.globals.update(get_avatar=get_avatar)
 app.jinja_env.globals.update(get_karma=get_karma)
+app.jinja_env.globals.update(get_reddit_age=get_reddit_age)

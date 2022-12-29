@@ -12,6 +12,36 @@
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <script>
+        function convertTime(time){
+            time = secondsSinceEpoch - time;
+            if(time < 60){
+                    var text = document.createTextNode(time + "s ago");
+                }
+                else if(time/60 < 60){
+                    time = parseInt(time / 60);
+                }
+                else if(time/3600<24){
+                    time = parseInt(time/3600);
+                    var text = document.createTextNode(time+"h ago");
+                }
+                else if(time/86400<30){
+                    time = parseInt(time/86400);
+                    var text = document.createTextNode(time+"d ago");
+                }
+                else if(time/2628002<12){
+                    time = parseInt(time/2628002);
+                    var text = document.createTextNode(time+"m ago");
+                }
+                else{
+                    y = parseInt(time/31104000);
+                    m = parseInt((time%31104000)/2628002);
+                    var text = document.createTextNode(y+"y "+m+"m");
+                }
+
+                return text;
+        }
+    </script>
     <header>
         <nav class="flex">
             <div class="logo">Reddit Mod</div>
@@ -266,27 +296,10 @@
                         <meta id="my-time-{{i}}" data-name="{{submission.created_utc}}">
                         <p class="created grey" id="created-{{i}}"></p>
                         <script>
-                            var postTime = secondsSinceEpoch - parseInt($('#my-time-{{i}}').data().name.toString());
+                            var postTime = parseInt($('#my-time-{{i}}').data().name.toString());
                             var post = document.getElementById('created-{{i}}');
-                            if(postTime < 60){
-                                var text = document.createTextNode(postTime + "s ago");
-                                post.appendChild(text);
-                            }
-                            else if(postTime/60 < 60){
-                                postTime = parseInt(postTime / 60);
-                                var text = document.createTextNode(postTime+"m ago");
-                                post.appendChild(text);
-                            }
-                            else if(postTime/3600<24){
-                                postTime = parseInt(postTime/3600);
-                                var text = document.createTextNode(postTime+"h ago");
-                                post.appendChild(text);
-                            }
-                            else{
-                                postTime = parseInt(postTime/86400);
-                                var text = document.createTextNode(postTime+"d ago");
-                                post.appendChild(text);
-                            }
+                            var getText = convertTime(postTime);
+                            post.appendChild(getText);
                         </script>
                     </div>
                     <div class="post-title bold">{{submission.title}}</div>
@@ -302,7 +315,7 @@
                     </div>
                     {%elif submission.is_reddit_media_domain %}
                         {%if submission.is_video %}
-                        <div class="grey flex-center">
+                        <div class="post-body grey flex-center">
                             <meta id="my-data-{{i}}" data-name="{{get_video(submission)}}">
                             <video muted="muted" width="400" autoplay="false" playsinline controls id="video-{{i}}" controls></video>
                             <script>
@@ -310,12 +323,12 @@
                                 </script>
                         </div>
                         {%else%}
-                        <div class="grey flex-center"><img src="{{submission.url}}" alt="" width="400px" ></div>
+                        <div class="post-body grey flex-center"><img src="{{submission.url}}" alt="" width="400px" ></div>
                         {%endif%}
                     {%else%}
                         {% if check_url(submission.url) == 'reddit' %}
                             {% if check_gallery(submission) %}
-                            <div class="slideshow-container" id="gallery_{{i}}">
+                            <div class="post-body slideshow-container" id="gallery_{{i}}">
                                 <script>
                                     indexes['gallery_{{i}}'] = 1;
                                     galleries.push('gallery_{{i}}');
@@ -347,11 +360,11 @@
                     <div class="post-footer flex">
                         <div class="vote flex">
                             <i class="fa-solid fa-arrow-up"></i>
-                            <p class="bold">{{curve_vote(submission.score)}}k</p>
+                            <p class="bold">{{curve_number(submission.score)}}k</p>
                             <i class="fa-solid fa-arrow-down"></i>
                         </div>
                         <div class="comment flex">
-                            <p class="grey bold">10 comments</p>
+                            <p class="grey bold">{{curve_number(submission.num_comments)}}k comment</p>
                             <i class="fa-solid fa-ellipsis-vertical grey"></i>
                         </div>
                     </div>
@@ -380,11 +393,17 @@
                         <div class="reddit-age flex">
                             <i class="fa-solid fa-calendar-days"></i>
                             <div>
-                                <p class="bold">2y 6m</p>
+                                <meta id="user-created-utc" data-name="{{get_reddit_age(reddit.user.me())}}">
+                                <p id = "user-created" class="bold"></p>
                                 <p class="grey">Reddit age</p>
                             </div>
                         </div>
                     </div>
+                    <script>
+                        var created = parseInt($('#user-created-utc').data().name)
+                        var ageCont = document.getElementById("user-created");
+                        ageCont.appendChild(convertTime(created));
+                    </script>
                 </div>
                 <div class="shoutbox">
                     <div class="shoutbox-label">Shoutbox</div>
@@ -479,7 +498,6 @@
         </div>
     </main>
     <footer></footer>
-     
                 <!--slide images on gallery posts-->
                 <script>
                     for (id of galleries){

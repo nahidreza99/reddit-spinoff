@@ -12,8 +12,5 @@ def obj():
     client_secret = 'vevcjIFvOdXkVKo51iGukpHdppJ-SQ',
     user_agent=User_Agent,
     redirect_uri='http://127.0.0.1:5000/authorize',
-)
-
-
-
+    )
     return reddit
