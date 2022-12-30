@@ -59,20 +59,17 @@ def inject_user():
 
 def get_submission(isFront, sub):
     if(isFront):
-        all_id = [submission.id for submission in reddit.front.hot(limit=30)]
+        all_id = [submission.id for submission in reddit.front.new(limit=30)]
     else:
-        all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=30)]
+        all_id = [submission.id for submission in reddit.subreddit(sub).new(limit=30)]
     fullnames = [f"t3_{id}" for id in all_id]
     print(all_id)
     return enumerate(reddit.info(fullnames=fullnames))
 
 def check_gallery(submission):
     gallery = False
-    try:
-        gallery = submission.__dict__.get('is_gallery', False)
-        print(gallery)
-    except AttributeError as e:
-        print(e)
+    gallery = submission.__dict__.get('is_gallery', False)
+    print(gallery)
     return gallery
 
 def get_urls(submission):
@@ -121,18 +118,15 @@ def get_reddit_age(redditor):
 def is_crosspost(submission):
     print(submission.name)
     crosspost=False
-    try:
-        parent = submission.__dict__.get('crosspost_parent', None)
-        if parent != None:
-            id = parent.split('_')
-            sub = []
-            sub.append(reddit.submission(id[1]))
-            print('parent: ', sub)
-            crosspost = True
-        else:
-            sub = None
-    except AttributeError as e:
-        print(e)
+    parent = submission.__dict__.get('crosspost_parent', None)
+    if parent != None:
+        id = parent.split('_')
+        sub = []
+        sub.append(reddit.submission(id[1]))
+        print('parent: ', sub)
+        crosspost = True
+    else:
+        sub = None
     return sub
 
 if __name__ == "__main__":
