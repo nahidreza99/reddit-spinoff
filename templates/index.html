@@ -20,6 +20,7 @@
                 }
                 else if(time/60 < 60){
                     time = parseInt(time / 60);
+                    var text = document.createTextNode(time + "s ago");
                 }
                 else if(time/3600<24){
                     time = parseInt(time/3600);
@@ -283,10 +284,10 @@
                         var galleries = [];
                         var secondsSinceEpoch = Math.round(Date.now() / 1000);
                 </script>
-                {% for i, submission in get_submission() %}
+                {% for i, submission in get_submission(front,sub) %}
                 <div class="post-container" id="{{i}}">
                     <div class="post-header">
-                        <a class="clickable flex" href="">
+                        <a class="clickable flex" href="/r/{{submission.subreddit.display_name}}">
                                 <i class="fa-brands fa-reddit-alien"></i>
                                 <p>{{submission.subreddit}}</p>
                         </a>
@@ -304,67 +305,135 @@
                     </div>
                     <div class="post-title bold">{{submission.title}}</div>
                     {%if submission.is_self %}
+                    {%if submission.selftext !=''%}
                     <div id="{{i}}-body" class="grey post-body">{{submission.selftext}}
+                    </div>
+                    {%endif%}
+                    <script>
+                        var element = document.getElementById('{{i}}-body');
+                        var height = element.clientHeight;
+                        if(height>250){
+                            element.className += " post-scroll";
+                        }
+                    </script>
+                    {%elif is_crosspost(submission) != None %}
+
+                    {% for crosspost in is_crosspost(submission) %}
+                    <div class="post-container" id="cross-post-{{i}}">
+                        <div class="post-header">
+                            <a class="clickable flex" href="">
+                                    <i class="fa-brands fa-reddit-alien"></i>
+                                    <p>{{crosspost.subreddit}}</p>
+                            </a>
+                            <i class="fa-solid fa-circle bullet grey"></i>
+                            <a href=""><p class="grey">{{crosspost.author}}</p></a>
+                            <i class="fa-solid fa-circle bullet grey"></i>
+                            <meta id="crosspost-time-{{i}}" data-name="{{crosspost.created_utc}}">
+                            <p class="created grey" id="created-crosspost-{{i}}"></p>
+                            <script>
+                                var postTime = parseInt($('#crosspost-time-{{i}}').data().name.toString());
+                                var post = document.getElementById('created-crosspost-{{i}}');
+                                var getText = convertTime(postTime);
+                                post.appendChild(getText);
+                            </script>
+                        </div>
+                        <div class="post-title bold">{{crosspost.title}}</div>
+                        {%if crosspost.is_self %}
+                        <div id="crosspost-{{i}}-body" class="grey post-body">{{crosspost.selftext}}
+                        </div>
                         <script>
-                            var element = document.getElementById('{{i}}-body');
+                            var element = document.getElementById('crosspost-{{i}}-body');
                             var height = element.clientHeight;
                             if(height>250){
                                 element.className += " post-scroll";
                             }
                         </script>
+                        {%elif crosspost.is_reddit_media_domain %}
+                            {%if crosspost.is_video %}
+                            <div class="post-body grey flex-center">
+                                <meta id="my-data-{{i}}" data-name="{{get_video(crosspost)}}">
+                                <video muted="muted" width="300" autoplay="false" playsinline controls id="video-{{i}}" controls></video>
+                                <script>
+                                    video_url['video-{{i}}'] = $('#my-data-{{i}}').data().name;
+                                </script>
+                            </div>
+                            {%else%}
+                            <div class="post-body grey flex-center"><img src="{{crosspost.url}}" alt="" width="300px" ></div>
+                            {%endif%}
+                        {% elif check_gallery(crosspost) %}
+                        <div class="slideshow-container" id="gallery_{{i}}">
+                            <script>
+                                indexes['gallery_{{i}}'] = 1;
+                                galleries.push('gallery_{{i}}');
+                            </script>
+                            <!-- Full-width images with number and caption text -->
+                            {% for k,u in get_urls(crosspost) %}
+                            <div class="mySlides fade">
+                                <img class="gal_img" src="{{u}}" style="width:400px">
+                            </div>
+                            {%endfor%}
+                            <!-- Next and previous buttons -->
+                            <a class="prev" onclick="plusSlides(-1, 'gallery_{{i}}', 'gallery_{{i}}')">&#10094;</a>
+                            <a class="next" onclick="plusSlides(1, 'gallery_{{i}}', 'gallery_{{i}}')">&#10095;</a>
+                            <br />
+                            <!-- The dots/circles -->
+                            <div style="text-align:center">
+                                {% for k,u in get_urls(crosspost) %}
+                                <span class="dot" onclick="currentSlide('{{k+1}}', 'gallery_{{i}}', 'gallery_{{i}}')"></span>
+                                {%endfor%}
+                            </div>
+                        </div>
+                        {%else%}
+                        <div class="post-body grey">Other link</div>
+                        {%endif%}
                     </div>
+                    {%endfor%}
                     {%elif submission.is_reddit_media_domain %}
                         {%if submission.is_video %}
-                        <div class="post-body grey flex-center">
+                        <div class="media-post grey flex-center">
                             <meta id="my-data-{{i}}" data-name="{{get_video(submission)}}">
                             <video muted="muted" width="400" autoplay="false" playsinline controls id="video-{{i}}" controls></video>
                             <script>
                                 video_url['video-{{i}}'] = $('#my-data-{{i}}').data().name;
-                                </script>
+                            </script>
                         </div>
                         {%else%}
-                        <div class="post-body grey flex-center"><img src="{{submission.url}}" alt="" width="400px" ></div>
+                        <div class="media-post grey flex-center"><img src="{{submission.url}}" alt="" width="400px" ></div>
                         {%endif%}
+                    {% elif check_gallery(submission) %}
+                    <div class="post-body slideshow-container" id="gallery_{{i}}">
+                        <script>
+                            indexes['gallery_{{i}}'] = 1;
+                            galleries.push('gallery_{{i}}');
+                        </script>
+                        <!-- Full-width images with number and caption text -->
+                        {% for k,u in get_urls(submission) %}
+                        <div class="mySlides fade">
+                            <img class="gal_img" src="{{u}}" style="width:400px">
+                        </div>
+                        {%endfor%}
+                        <!-- Next and previous buttons -->
+                        <a class="prev" onclick="plusSlides(-1, 'gallery_{{i}}', 'gallery_{{i}}')">&#10094;</a>
+                        <a class="next" onclick="plusSlides(1, 'gallery_{{i}}', 'gallery_{{i}}')">&#10095;</a>
+                        <br />
+                        <!-- The dots/circles -->
+                        <div style="text-align:center">
+                            {% for k,u in get_urls(submission) %}
+                            <span class="dot" onclick="currentSlide('{{k+1}}', 'gallery_{{i}}', 'gallery_{{i}}')"></span>
+                            {%endfor%}
+                        </div>
+                    </div>
                     {%else%}
-                        {% if check_url(submission.url) == 'reddit' %}
-                            {% if check_gallery(submission) %}
-                            <div class="post-body slideshow-container" id="gallery_{{i}}">
-                                <script>
-                                    indexes['gallery_{{i}}'] = 1;
-                                    galleries.push('gallery_{{i}}');
-                                </script>
-                                <!-- Full-width images with number and caption text -->
-                                {% for k,u in get_urls(submission) %}
-                                <div class="mySlides fade">
-                                    <img class="gal_img" src="{{u}}" style="width:400px">
-                                </div>
-                                {%endfor%}
-                                <!-- Next and previous buttons -->
-                                <a class="prev" onclick="plusSlides(-1, 'gallery_{{i}}', 'gallery_{{i}}')">&#10094;</a>
-                                <a class="next" onclick="plusSlides(1, 'gallery_{{i}}', 'gallery_{{i}}')">&#10095;</a>
-                                <br />
-                                <!-- The dots/circles -->
-                                <div style="text-align:center">
-                                    {% for k,u in get_urls(submission) %}
-                                    <span class="dot" onclick="currentSlide('{{k+1}}', 'gallery_{{i}}', 'gallery_{{i}}')"></span>
-                                    {%endfor%}
-                                </div>
-                            </div>
-                            {%else%}
-                            <div class="post-body grey">Reddit link</div>
-                            {%endif%}
-                        {%else%}
-                        <div class="post-body grey">Other link</div>
-                        {%endif%}
+                    <div class="post-body grey">Other link</div>
                     {%endif%}
                     <div class="post-footer flex">
                         <div class="vote flex">
                             <i class="fa-solid fa-arrow-up"></i>
-                            <p class="bold">{{curve_number(submission.score)}}k</p>
+                            <p class="bold">{{curve_number(submission.score)}}</p>
                             <i class="fa-solid fa-arrow-down"></i>
                         </div>
                         <div class="comment flex">
-                            <p class="grey bold">{{curve_number(submission.num_comments)}}k comment</p>
+                            <p class="grey bold">{{curve_number(submission.num_comments)}} comment</p>
                             <i class="fa-solid fa-ellipsis-vertical grey"></i>
                         </div>
                     </div>

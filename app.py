@@ -9,6 +9,19 @@ app = Flask(__name__)
 
 reddit=obj()
 
+@app.route("/<string:t>/<string:red>")
+def mainpage(t,red):
+    loginURL = reddit.auth.url(scopes=["*"], state="...", duration="permanent")
+    front = True
+    sub = ''
+    if red!='all':
+        front = False
+        sub = red
+    return render_template('index.html', **locals())
+
+@app.route("/")
+def home():
+    return redirect('/r/all')
 
 @app.route("/authorize")
 def authorize():
@@ -20,16 +33,9 @@ def authorize():
     print(type(user))
     if user:
 
-        return redirect(url_for('home'))
+        return redirect('/r/all')
     else:
         return "unsuccesful"
-
-@app.route("/")
-def home():
-    loginURL = reddit.auth.url(scopes=["*"], state="...", duration="permanent")
-
-    return render_template('index.html', **locals())
-
 
 @app.route('/api/search-subreddits', methods=['POST','GET'])
 def search_subreddits():
@@ -50,24 +56,35 @@ def inject_user():
     
     #json_string = json.dumps(reddit_dict)
     return dict(reddit=reddit)
-    
-def check_gallery(submission):
-    if hasattr(submission, 'is_gallery'):
-        return True
+
+def get_submission(isFront, sub):
+    if(isFront):
+        all_id = [submission.id for submission in reddit.front.hot(limit=30)]
     else:
-        return False
+        all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=30)]
+    fullnames = [f"t3_{id}" for id in all_id]
+    print(all_id)
+    return enumerate(reddit.info(fullnames=fullnames))
+
+def check_gallery(submission):
+    gallery = False
+    try:
+        gallery = submission.__dict__.get('is_gallery', False)
+        print(gallery)
+    except AttributeError as e:
+        print(e)
+    return gallery
 
 def get_urls(submission):
     gal = []
     for img_itm in submission.media_metadata:
-        gal.append(str(submission.media_metadata[img_itm]['s']['u']))
+        try:
+            gal.append(str(submission.media_metadata[img_itm]['s']['u']))
+        except KeyError as e:
+            print('gallery error: ', '[reddit: ', submission.subreddit,'title: ', submission.title,']')
+            print(e)
     return enumerate(gal)
 
-def get_submission():
-    all_id = [submission.id for submission in reddit.front.hot(limit=30)]
-    fullnames = [f"t3_{id}" for id in all_id]
-    print(all_id)
-    return enumerate(reddit.info(fullnames=fullnames))
 def get_video(submission):
     return submission.media['reddit_video']['hls_url']
 
@@ -88,9 +105,9 @@ def get_commentsLength(submission):
 
 def curve_number(num):
     if num>1000:
-        return round(float(num/1000),1)
+        return str(round(float(num/1000),1))+'k'
     else:
-        return num
+        return str(num)
 
 def get_avatar(redditor):
     return reddit.redditor(str(redditor)).icon_img
@@ -101,6 +118,22 @@ def get_karma(redditor):
 def get_reddit_age(redditor):
     return reddit.redditor(str(redditor)).created_utc
 
+def is_crosspost(submission):
+    print(submission.name)
+    crosspost=False
+    try:
+        parent = submission.__dict__.get('crosspost_parent', None)
+        if parent != None:
+            id = parent.split('_')
+            sub = []
+            sub.append(reddit.submission(id[1]))
+            print('parent: ', sub)
+            crosspost = True
+        else:
+            sub = None
+    except AttributeError as e:
+        print(e)
+    return sub
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -114,4 +147,5 @@ app.jinja_env.globals.update(get_upvote=get_upvote)
 app.jinja_env.globals.update(curve_number=curve_number)
 app.jinja_env.globals.update(get_avatar=get_avatar)
 app.jinja_env.globals.update(get_karma=get_karma)
+app.jinja_env.globals.update(is_crosspost=is_crosspost)
 app.jinja_env.globals.update(get_reddit_age=get_reddit_age)
