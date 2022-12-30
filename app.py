@@ -59,9 +59,9 @@ def inject_user():
 
 def get_submission(isFront, sub):
     if(isFront):
-        all_id = [submission.id for submission in reddit.front.new(limit=30)]
+        all_id = [submission.id for submission in reddit.front.hot(limit=30)]
     else:
-        all_id = [submission.id for submission in reddit.subreddit(sub).new(limit=30)]
+        all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=30)]
     fullnames = [f"t3_{id}" for id in all_id]
     print(all_id)
     return enumerate(reddit.info(fullnames=fullnames))

@@ -321,7 +321,7 @@
                     {% for crosspost in is_crosspost(submission) %}
                     <div class="post-container" id="cross-post-{{i}}">
                         <div class="post-header">
-                            <a class="clickable flex" href="">
+                            <a class="clickable flex" href="/r/{{crosspost.subreddit.display_name}}">
                                     <i class="fa-brands fa-reddit-alien"></i>
                                     <p>{{crosspost.subreddit}}</p>
                             </a>
@@ -567,64 +567,64 @@
         </div>
     </main>
     <footer></footer>
-                <!--slide images on gallery posts-->
-                <script>
-                    for (id of galleries){
-                        showSlides(indexes.id, id, id);
-                    }
-                    
-                    // Next/previous controls
-                    function plusSlides(n, id, index) { // n - number of slide, id - container id, index - current slide number in slider
-                        showSlides(indexes[index] += n, id, index);
-                    }
-                    // Thumbnail image controls
-                    function currentSlide(n, id, index) {
-                        showSlides(indexes[index] = n, id, index);
-                    }
-                
-                    function showSlides(n, id, index) {
-                        var i;
-                        var slides = document.querySelectorAll(`#${id} .mySlides`);
-                        var dots = document.querySelectorAll(`#${id} .dot`);
-                        if (n > slides.length) {
-                            indexes[index] = 1;
-                        }
-                        if (n < 1) {indexes[index] = slides.length}
-                        for (i = 0; i < slides.length; i++) {
-                            slides[i].style.display = "none";
-                        }
-                        for (i = 0; i < dots.length; i++) {
-                            dots[i].className = dots[i].className.replace(" active_img", "");
-                        }
-                        slides[indexes[index]-1].style.display = "block";
-                        dots[indexes[index]-1].className += " active_img";
-                    }
-                </script>
-                <!--load the videos on the video posts-->
-                <script>
-                    if(Hls.isSupported()) {
-                        for (const [key, value] of Object.entries(video_url)) {
-                            var video = document.getElementById(key);
-                            var hls = new Hls();
-                            //quelle = 'http://linux-app.tv:6204/live/21164920/31520888/23808.m3u8';
-                            hls.loadSource(value);
-                            
-                            hls.attachMedia(video);
-                            hls.on(Hls.Events.MANIFEST_PARSED,function() {
-                                video.play();
-                            });
-                        }
-                    }
-                   // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
-                   // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
-                   // This is using the built-in support of the plain video element, without using hls.js.
-                    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                        video.src = '';
-                        video.addEventListener('canplay',function() {
-                        video.play();
-                        });
-                    }
-                  </script>
+<!--slide images on gallery posts-->
+<script>
+for (id of galleries){
+    showSlides(indexes.id, id, id);
+}
+
+// Next/previous controls
+function plusSlides(n, id, index) { // n - number of slide, id - container id, index - current slide number in slider
+    showSlides(indexes[index] += n, id, index);
+}
+// Thumbnail image controls
+function currentSlide(n, id, index) {
+    showSlides(indexes[index] = n, id, index);
+}
+
+function showSlides(n, id, index) {
+    var i;
+    var slides = document.querySelectorAll(`#${id} .mySlides`);
+    var dots = document.querySelectorAll(`#${id} .dot`);
+    if (n > slides.length) {
+        indexes[index] = 1;
+    }
+    if (n < 1) {indexes[index] = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active_img", "");
+    }
+    slides[indexes[index]-1].style.display = "block";
+    dots[indexes[index]-1].className += " active_img";
+}
+</script>
+<!--load the videos on the video posts-->
+<script>
+if(Hls.isSupported()) {
+    for (const [key, value] of Object.entries(video_url)) {
+        var video = document.getElementById(key);
+        var hls = new Hls();
+        //quelle = 'http://linux-app.tv:6204/live/21164920/31520888/23808.m3u8';
+        hls.loadSource(value);
+        
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            video.play();
+        });
+    }
+}
+// hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+// When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+// This is using the built-in support of the plain video element, without using hls.js.
+else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = '';
+    video.addEventListener('canplay',function() {
+    video.play();
+    });
+}
+</script>
   <!-- JavaScript code to handle the search form submission and display the results -->
   <script>
     // Import the PRAW module
