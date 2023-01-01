@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
     <title>Reddit Mod</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/mainpage.css') }}">
     <script src="https://kit.fontawesome.com/6b6d803fb1.js" crossorigin="anonymous"></script>
@@ -49,13 +51,14 @@
             <div class="nav-bar">
                 <ul class="nav-btn flex">
                     <li><a href="#">Display</a></li>
-                    <li>
-                    {%if reddit.user.me()%}
-                    {{reddit.user.me()}}
+                    
+                    {%if reddit and reddit.user.me()%}
+                    <li> {{reddit.user.me()}}</li>
+                    <li><a href="{{url_for('logout')}}">Logout</a></li>
                     {%else%}
-                    <a href="{{loginURL}}">User</a>
+                    <li> <a href="{{loginURL}}">login</a></li>
                     {%endif%}
-                    </li>
+                    
                     <li><a href="#">Settings</a></li>
                 </ul>
             </div>
@@ -63,221 +66,25 @@
     </header>
     <main class="main">
         <div class="container index">
-            <div class="cont left">
-                <div class="search">
-                    <div class="flex search-container">
-                        <input type="text" placeholder="search subreddit..." name="" id="">
-                        <i class="fa-solid fa-magnifying-glass grey"></i>
-                    </div>
-                </div>
-                <div class="scrollpane">
-                    <div class="subr">
-                        <div class="label">My Subreddit</div>
-                        <div class="feature flex">
-                            <a class="clickable flex" href="">
-                                <i class="fa-brands fa-reddit-alien"></i>
-                                <p>subreddit</p>
-                            </a>
-                            <div class="info">
-                                <ul>
-                                    <li><i class="fa-solid fa-flag"></i></li>
-                                    <li><p>10k</p></li>
-                                    <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="feature flex">
-                            <a class="clickable flex" href="">
-                                <i class="fa-brands fa-reddit-alien"></i>
-                                <p>subreddit</p>
-                            </a>
-                            <div class="info">
-                                <ul>
-                                    <li><i class="fa-solid fa-flag"></i></li>
-                                    <li><p>10k</p></li>
-                                    <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="feature flex">
-                            <a class="clickable flex" href="">
-                                <i class="fa-brands fa-reddit-alien"></i>
-                                <p>subreddit</p>
-                            </a>
-                            <div class="info">
-                                <ul>
-                                    <li><i class="fa-solid fa-flag"></i></li>
-                                    <li><p>10k</p></li>
-                                    <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="feature flex">
-                            <a class="clickable flex" href="">
-                                <i class="fa-brands fa-reddit-alien"></i>
-                                <p>subreddit</p>
-                            </a>
-                            <div class="info">
-                                <ul>
-                                    <li><i class="fa-solid fa-flag"></i></li>
-                                    <li><p>10k</p></li>
-                                    <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mood">
-                        <div class="moods my">
-                            <div class="label">My moods</div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="moods trending">
-                            <div class="label">Trending <i class="fa-solid fa-fire-flame-curved"></i></div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="feature flex">
-                                <a class="clickable flex" href="">
-                                    <i class="fa-brands fa-reddit-alien"></i>
-                                    <p>subreddit</p>
-                                </a>
-                                <div class="info">
-                                    <ul>
-                                        <li><i class="fa-solid fa-flag"></i></li>
-                                        <li><p>10k</p></li>
-                                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                {%include 'leftsidebar.html'%}
             <div class="cont center">
                 <div class="search">
                     <!-- HTML code for the search form -->
-                    <form id="search-form">
-                        <label for="query">Search for a subreddit:</label><br>
-                        <input type="text" id="query" name="query"><br>
-                        <button type="submit">Search</button>
-                    </form>
+                    <form class="form-inline my-2 my-lg-0" id="stext">
+                        <input  id='query'class="form-control mr-sm-2  " type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0  sbtn" type="submit">Search</button>
+                      </form>
+                      
+                    
   
-                    <!-- Div element to display the search results -->
-                    <div id="results"></div>
+                   
                 </div>
+                 <!-- Div element to display the search results -->
+                 <div id="searchResults" >
+                    <ul id="slist">
+                      
+                    </ul>
+                  </div>
                 <div class="scrollpane">
                 <script>var video_url = new Object();
                         var indexes = new Object();
@@ -441,129 +248,9 @@
                 {%endfor%}
                 </div>
             </div>
-            <div class="cont right">
-                <div class="user-info">
-                    <div class="avatar">
-                        <img src="{{get_avatar(reddit.user.me())}}" height="100px" alt="">
-                        <p class="bold">u/{{reddit.user.me()}}</p>
-                        <div class="online-status flex">
-                            <i class="fa-solid fa-circle active"></i>
-                            <p class="grey">Online-status: On</p>
-                        </div>
-                    </div>
-                    <div class="stat">
-                        <div class="karma flex">
-                            <i class="fa-regular fa-snowflake"></i>
-                            <div>
-                                <p class="bold">{{get_karma(reddit.user.me())}}</p>
-                                <p class="grey">Karma</p>
-                            </div>
-                        </div>
-                        <div class="reddit-age flex">
-                            <i class="fa-solid fa-calendar-days"></i>
-                            <div>
-                                <meta id="user-created-utc" data-name="{{get_reddit_age(reddit.user.me())}}">
-                                <p id = "user-created" class="bold"></p>
-                                <p class="grey">Reddit age</p>
-                            </div>
-                        </div>
-                    </div>
-                    <script>
-                        var created = parseInt($('#user-created-utc').data().name)
-                        var ageCont = document.getElementById("user-created");
-                        ageCont.appendChild(convertTime(created));
-                    </script>
-                </div>
-                <div class="shoutbox">
-                    <div class="shoutbox-label">Shoutbox</div>
-                    <div class="shout">
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                        <div class="message">
-                            <div class="msg-info flex">
-                                <p class="grey">12:30 pm</p>
-                                <i class="fa-solid fa-circle active"></i>
-                            </div>
-                            <p><span class="red">username</span>:</p>
-                            <p class="msg-body">This is a sample message. This is how it wraps.</p>
-                        </div>
-                    </div>
-                    <div class="message-box flex">
-                        <input type="textarea" placeholder="Type message here...">
-                        <i class="fa-solid fa-paper-plane red"></i>
-                    </div>
-                </div>
-            </div>
+
+            {%include 'rightsidebar.html'%}
+            
         </div>
     </main>
     <footer></footer>
@@ -626,50 +313,6 @@ else if (video.canPlayType('application/vnd.apple.mpegurl')) {
 }
 </script>
   <!-- JavaScript code to handle the search form submission and display the results -->
-  <script>
-    // Import the PRAW module
-  
-  // Create a Reddit instance
-
-  // Get the search form and the results div
-  const searchForm = document.getElementById('search-form');
-  const resultsDiv = document.getElementById('results');
-
-  // Add an event listener to the search form to handle form submissions
-  searchForm.addEventListener('submit', (event) => {
-    // Prevent the form from submitting
-    event.preventDefault();
-
-    // Get the search query from the form
-    const query = document.getElementById('query').value;
-
-    // Search for subreddits using PRAW
-    //const redditjs = JSON.parse(redditjson);
-    const xhr = new XMLHttpRequest();
- 
-    xhr.open('POST', '/api/search-subreddits', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = () => {
-    if (xhr.status === 200) {
-    // Parse the response from the server
-    const response = JSON.parse(xhr.responseText);
-    // Clear the results div
-    resultsDiv.innerHTML = '';
-    // Display the results
-    response.subreddit_name.forEach((name) => {
-        const p = document.createElement('p');
-        p.innerText = name;
-        resultsDiv.appendChild(p);
-    });
-    } else {
-    // Display an error message if the request fails
-    resultsDiv.innerHTML = 'An error occurred';
-    }
-
-    };
-    xhr.send(`query=${query}`);
-//$('#results').slideDown();
-    });
-  </script>
+  <script src="{{ url_for('static', filename='logic.js') }}"></script>
 </body>
 </html>

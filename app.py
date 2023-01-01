@@ -4,14 +4,18 @@ import requests
 import praw ,json
 import PIL
 import urllib
-from variables import   obj
-app = Flask(__name__)
+from variables import   obj,old_obj
 
-reddit=obj()
+app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8zfuad##@3/'
+
+reddit=None
+loginURL=None
+
 
 @app.route("/<string:t>/<string:red>")
 def mainpage(t,red):
-    loginURL = reddit.auth.url(scopes=["*"], state="...", duration="permanent")
+
     front = True
     sub = ''
     if red!='all':
@@ -21,18 +25,44 @@ def mainpage(t,red):
 
 @app.route("/")
 def home():
+    global reddit
+    if 'refresh_token' in session:
+        
+        reddit=old_obj(session['refresh_token'])
+    else:
+        
+        reddit=obj()
+        global loginURL
+        loginURL = reddit.auth.url(scopes=["*"], state="...", duration="permanent")
     return redirect('/r/all')
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    global reddit
+    reddit=None
+    return redirect('/')
 
 @app.route("/authorize")
 def authorize():
     code = request.args.get('code')
     
     authorization_code = reddit.auth.authorize(code)
+    print('refresh token',type(authorization_code))
+    #print(type(authorization_code))
+    
     user = reddit.user.me()
-    print(user)
-    print(type(user))
+    # if user:
+    #     #session['user']=str(user)
+    #     # session['loggedin']=True
+    #     #session['access_token']=reddit.auth.access_token
+    #     #print(reddit.expires_at)
+    #     print(user)
+    #     print(type(user))
     if user:
-
+        session['refresh_token']=authorization_code
+        print(session['refresh_token'])
+        #print(reddit.expires_at)
         return redirect('/r/all')
     else:
         return "unsuccesful"
@@ -55,7 +85,7 @@ def search_subreddits():
 def inject_user():
     
     #json_string = json.dumps(reddit_dict)
-    return dict(reddit=reddit)
+    return dict(reddit=reddit,loginURL=loginURL)
 
 def get_submission(isFront, sub):
     if(isFront):

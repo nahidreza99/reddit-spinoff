@@ -170,8 +170,31 @@ nav{
     height: 50px;
     background-color: #000B17;
     border-radius: inherit;
+   
 }
 
+/* seach box css --- need more work */
+#searchResults{
+
+position: relative;
+
+
+}
+
+
+#slist.open{
+    max-height: 500px;
+}
+#slist{
+    position: absolute;
+    max-height: 0px;
+overflow: hidden;
+transition: max-height 0.5s;
+    background-color: rgb(27, 25, 25);
+    color: white;
+}
+
+/* endblock */
 .search-container{
     justify-content: center;
     align-items: center;
