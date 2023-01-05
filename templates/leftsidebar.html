@@ -1,5 +1,7 @@
 
 <div class="cont left">
+
+    
     <div class="search">
         <div class="flex search-container">
             <input type="text" placeholder="search subreddit..." name="" id="">
@@ -8,9 +10,9 @@
     </div>
     <div class="scrollpane">
         <div class="subr">
-            <div class="label">My Subreddit</div>
-            <div class="feature flex">
-                <a class="clickable flex" href="">
+            <div class="label sublist" >My Selection</div>
+            <div class="feature flex " id ='my-sub-list'  >
+                <!-- <a class="clickable flex" href="">
                     <i class="fa-brands fa-reddit-alien"></i>
                     <p>subreddit</p>
                 </a>
@@ -20,103 +22,38 @@
                         <li><p>10k</p></li>
                         <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
                     </ul>
-                </div>
+                </div> -->
             </div>
-            <div class="feature flex">
-                <a class="clickable flex" href="">
-                    <i class="fa-brands fa-reddit-alien"></i>
-                    <p>subreddit</p>
-                </a>
-                <div class="info">
-                    <ul>
-                        <li><i class="fa-solid fa-flag"></i></li>
-                        <li><p>10k</p></li>
-                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="feature flex">
-                <a class="clickable flex" href="">
-                    <i class="fa-brands fa-reddit-alien"></i>
-                    <p>subreddit</p>
-                </a>
-                <div class="info">
-                    <ul>
-                        <li><i class="fa-solid fa-flag"></i></li>
-                        <li><p>10k</p></li>
-                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="feature flex">
-                <a class="clickable flex" href="">
-                    <i class="fa-brands fa-reddit-alien"></i>
-                    <p>subreddit</p>
-                </a>
-                <div class="info">
-                    <ul>
-                        <li><i class="fa-solid fa-flag"></i></li>
-                        <li><p>10k</p></li>
-                        <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                    </ul>
-                </div>
-            </div>
+            
         </div>
         <div class="mood">
-            <div class="moods my">
-                <div class="label">My moods</div>
-                <div class="feature flex">
-                    <a class="clickable flex" href="">
-                        <i class="fa-brands fa-reddit-alien"></i>
-                        <p>subreddit</p>
-                    </a>
-                    <div class="info">
-                        <ul>
-                            <li><i class="fa-solid fa-flag"></i></li>
-                            <li><p>10k</p></li>
-                            <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                        </ul>
-                    </div>
+            <div class="moods my Playlist" id ='new-mod'>
+                <div class="label">My moods 
+
+                    <button id="toggle-button">+</button>
+<div id="input-area" style="display: none;">
+  
+  <input type="text" id="input-field"> <input type="submit" value="Create" id="create-mod">
+</div>
+
                 </div>
-                <div class="feature flex">
-                    <a class="clickable flex" href="">
-                        <i class="fa-brands fa-reddit-alien"></i>
-                        <p>subreddit</p>
-                    </a>
-                    <div class="info">
-                        <ul>
-                            <li><i class="fa-solid fa-flag"></i></li>
-                            <li><p>10k</p></li>
-                            <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="feature flex">
-                    <a class="clickable flex" href="">
-                        <i class="fa-brands fa-reddit-alien"></i>
-                        <p>subreddit</p>
-                    </a>
-                    <div class="info">
-                        <ul>
-                            <li><i class="fa-solid fa-flag"></i></li>
-                            <li><p>10k</p></li>
-                            <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="feature flex">
-                    <a class="clickable flex" href="">
-                        <i class="fa-brands fa-reddit-alien"></i>
-                        <p>subreddit</p>
-                    </a>
-                    <div class="info">
-                        <ul>
-                            <li><i class="fa-solid fa-flag"></i></li>
-                            <li><p>10k</p></li>
-                            <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
-                        </ul>
-                    </div>
-                </div>
+
+               {%if 'user_id' in session%}
+                {%for i in get_mods(session['user_id']) %}
+                <div class="feature flex ">
+                    <a class="clickable flex" href=""><i class="fa-brands fa-reddit-alien">
+
+                    </i><p class="item" id="{{i.id}}">{{i.name}}</p></a><div class="info"><ul>
+                            <li><i class="fa-solid fa-flag"></i>
+                            </li>
+                            <li><p>10k</p></li><li>
+                                    <i class="fa-solid fa-ellipsis-vertical"></i></li></ul></div></div>
+
+                {%endfor%}
+                {%endif%}
+               
+                
+ 
             </div>
             <div class="moods trending">
                 <div class="label">Trending <i class="fa-solid fa-fire-flame-curved"></i></div>

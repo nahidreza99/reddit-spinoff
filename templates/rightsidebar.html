@@ -33,91 +33,22 @@
     </div>
     <div class="shoutbox">
         <div class="shoutbox-label">Shoutbox</div>
-        <div class="shout">
+        <div class="shout" onchange="reloadmsg()" id ='shout-box'>
+            {%for i in get_chats()%}
             <div class="message">
                 <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
+                    <p class="grey">{{i.created}}</p>
                     <i class="fa-solid fa-circle active"></i>
                 </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
+                <p><span class="red">{{i.owner}}</span>:</p>
+                <p class="msg-body" id="{{i.id}}">{{i.message}}</p>
             </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
-            <div class="message">
-                <div class="msg-info flex">
-                    <p class="grey">12:30 pm</p>
-                    <i class="fa-solid fa-circle active"></i>
-                </div>
-                <p><span class="red">username</span>:</p>
-                <p class="msg-body">This is a sample message. This is how it wraps.</p>
-            </div>
+            {%endfor%}
+           
         </div>
         <div class="message-box flex">
-            <input type="textarea" placeholder="Type message here...">
-            <i class="fa-solid fa-paper-plane red"></i>
+            <input type="textarea" id="message-box" placeholder="Type message here...">
+            <a href="" id="send-msg"  ><i class="fa-solid fa-paper-plane red"></i></a>
         </div>
     </div>
 </div>
