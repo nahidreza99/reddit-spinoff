@@ -6,6 +6,7 @@ import PIL
 import urllib
 from variables import   obj,old_obj
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 from sqlalchemy.orm import aliased
 # from flask_session import Session
 
@@ -154,11 +155,13 @@ def send_msg():
 def get_msg():
     my_list=get_chats()
     data = [{attr: getattr(obj, attr) for attr in ['created', 'id', 'owner','message']} for obj in my_list]
-    print(data)
+    #print(data)
     return jsonify({'res':data})
+
 @app.route("/update_msg/<int:id>",methods=['POST','GET'])
 def update_msg(id):
     query = request.form['query']
+    print('got here ',query)
     if query and 'user' in session:
         msg=Chatbox.query.filter_by(id=id).first()
         msg.message=query
@@ -319,7 +322,7 @@ def get_mods(id):
     print(list)
     return list
 def get_chats():
-    list = Chatbox.query.all()
+    list = Chatbox.query.order_by(desc(Chatbox.id)).all()
     return list
 
 if __name__ == "__main__":

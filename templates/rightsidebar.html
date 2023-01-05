@@ -33,7 +33,7 @@
     </div>
     <div class="shoutbox">
         <div class="shoutbox-label">Shoutbox</div>
-        <div class="shout" onchange="reloadmsg()" id ='shout-box'>
+        <div class="shout"  id ='shout-box'>
             {%for i in get_chats()%}
             <div class="message">
                 <div class="msg-info flex">
@@ -41,7 +41,7 @@
                     <i class="fa-solid fa-circle active"></i>
                 </div>
                 <p><span class="red">{{i.owner}}</span>:</p>
-                <p class="msg-body" id="{{i.id}}">{{i.message}}</p>
+                <p class="msg-body"   id="msg-{{i.id}}">{{i.message}}</p>
             </div>
             {%endfor%}
            

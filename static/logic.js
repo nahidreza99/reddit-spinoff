@@ -28,7 +28,7 @@ function convertTime(time){
         return text;
 }
 
-
+let requestSent = false;
 // search js 
 
 
@@ -90,7 +90,7 @@ function convertTime(time){
 //     console.log(searchText);
 //   });
   
-
+//// Create Playlist
   const toggleButton = document.getElementById('toggle-button');
   const inputArea = document.getElementById('input-area');
   const createmod = document.getElementById('create-mod');
@@ -179,6 +179,7 @@ send.addEventListener('click', (event) => {
   if (xhr.status === 200) {
   const response = JSON.parse(xhr.responseText);
   const p = document.createElement('div');
+  requestSent = false;
   if (response.res=='OK')
   {p.innerHTML+='<div class="message"><div class="msg-info flex"><p class="grey">'+'just now'+'</p><i class="fa-solid fa-circle active"></i></div><p><span class="red">'+'you'+'</span>:</p><p class="msg-body">'+query+'</p></div>';
   }
@@ -209,7 +210,6 @@ send.addEventListener('click', (event) => {
 
   // after clicking a playlists , its subreddits will be displayed
 
-  // Get a reference to the container element
   var playlist = document.querySelector('.Playlist');
   const mysubreddit = document.getElementById('my-sub-list');
   // Add an event listener to the container that listens for click events
@@ -303,6 +303,8 @@ send.addEventListener('click', (event) => {
 
 //   }
 // });
+
+/// this is the remove subreddit part that doesnt work
 $('.xxx').click(function(e) {
   e.preventDefault(); // Prevent the link from being followed
   var link = $(this).attr('href'); // Get the link
@@ -348,33 +350,36 @@ element.addEventListener("click", function(event) {
 
   // Focus the textarea
   textarea.focus();
-  var msg= document.getElementById(id)
+  console.log('msg '+id);
+  var msg= document.getElementById(id);
   // Add a blur event listener to the textarea
-  textarea.addEventListener("keydown", function(event) {
+  textarea.addEventListener("keydown", function(e) {
     // Create a new element
     var newElement = document.createElement("div");
 
-    if (event.key == "Enter") {
-      msg.innerHTML = event.target.value;
-
-      xhr.open('POST', '/update_msd/'+id, true);
+    if (e.key == "Enter") {
+      console.log(textarea.value)
+      msg.innerText = textarea.value;
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/update_msg/'+Number(id.split('-')[1]), true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhr.onload = function ()  {
-      const response = JSON.parse(xhr.responseText);
-      console.log(response);
+       
+      console.log(xhr.responseText);
       
     
      
     
       };
-      xhr.send(`query=${msg}`);
+      console.log('text'+msg.value);
+      xhr.send(`query=${msg.innerText}`);
 
 
 
 
 
       // Remove the textarea
-      event.target.remove();
+      e.target.remove();
     }
     
 
@@ -411,51 +416,61 @@ element.addEventListener("click", function(event) {
 //   xhr.onload = function ()  {
   
 //   const response = JSON.parse(xhr.responseText);
-  
-//   response.forEach((i) => {
+//   p.innerHTML='';
+//   console.log(response)
+//   response.res.forEach((i) => {
 //     p.innerHTML+=
-//     '<div class="message"> <div class="msg-info flex"> <p class="grey">'+i.created+'</p><i class="fa-solid fa-circle active"></i></div> <p><span class="red">'+i.owner+'</span>:</p><p class="msg-body" id="'+i.id+'">'+i.message+'</p></div>'
+//     '<div class="message"> <div class="msg-info flex"> <p class="grey">'+i.created+'</p><i class="fa-solid fa-circle active"></i></div> <p><span class="red">'+i.owner+'</span>:</p><p class="msg-body"  id="'+i.id+'">'+i.message+'</p></div>'
 
 // } )
 
  
 
 //   };
-//   xhr.send(`query=${query}`);
+//   xhr.send();
 
 // }
 
+// refresh the shout box on new messenge 
+let observer = new MutationObserver(mutations => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === 'childList' && mutation.addedNodes.length > 0 &&  !requestSent ) {
+      console.log('changed ');
+      const xhr = new XMLHttpRequest();
+      const p = document.getElementById('shout-box');
+      xhr.open('GET', '/get_msg', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.send();
+      xhr.onload = function ()  {
+         requestSent = true;
+        console.log(xhr.responseText);
+      const response = JSON.parse(xhr.responseText);
+      console.log(response);
+      p.innerHTML=''
+      response.res.forEach((i) => {
+        p.innerHTML+=
+        '<div class="message"> <div class="msg-info flex"> <p class="grey">'+i.created+'</p><i class="fa-solid fa-circle active"></i></div> <p><span class="red">'+i.owner+'</span>:</p><p class="msg-body" id="msg-'+i.id+'">'+i.message+'</p></div>'
+    
+    } )
+    
+     
+    
+      };
+      
 
-let observer = new MutationObserver(mutationRecords => {
-  console.log('changed ');
-  const xhr = new XMLHttpRequest();
-  const p = document.getElementById('shout-box');
-  xhr.open('GET', '/get_msg', true);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.onload = function ()  {
-    console.log(xhr.responseText);
-  const response = JSON.parse(xhr.responseText);
-  console.log(response);
-  response.res.forEach((i) => {
-    p.innerHTML+=
-    '<div class="message"> <div class="msg-info flex"> <p class="grey">'+i.created+'</p><i class="fa-solid fa-circle active"></i></div> <p><span class="red">'+i.owner+'</span>:</p><p class="msg-body" id="'+i.id+'">'+i.message+'</p></div>'
-
-} )
-
- 
-
-  };
-  xhr.send();
+    }
+  });
+  
 
 
 
 
 });
 // observe everything except attributes
-observer.observe(document.getElementById('shout-box'), {
-  childList: true, // observe direct children
-  subtree: true, // lower descendants too
-  characterDataOldValue: true, // pass old data to callback
+var s=document.getElementById('shout-box');
+observer.observe(s, {
+  childList:true,
+
 });
 
 
