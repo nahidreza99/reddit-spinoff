@@ -4,14 +4,19 @@
     
     <div class="search">
         <div class="flex search-container">
-            <input type="text" placeholder="search subreddit..." name="" id="">
-            <i class="fa-solid fa-magnifying-glass grey"></i>
+            <input id="query" type="text" placeholder="search subreddit..." name="" id="">
+            <i id="stext" class="fa-solid fa-magnifying-glass grey"></i>
+            <div id="searchResults" >
+                <ul id="slist">
+                  
+                </ul>
+            </div>
         </div>
     </div>
     <div class="scrollpane">
         <div class="subr">
             <div class="label sublist" >My Selection</div>
-            <div class="feature flex " id ='my-sub-list'  >
+            <div class="" id ='my-sub-list'  >
                 <!-- <a class="clickable flex" href="">
                     <i class="fa-brands fa-reddit-alien"></i>
                     <p>subreddit</p>
@@ -23,19 +28,20 @@
                         <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
                     </ul>
                 </div> -->
+                <div id = "add-sub">
+                    <!-- <div class="dropdown-menu " aria-labelledby="dropdownMenuButton " id="playlist-list"></div> -->
+                </div>
             </div>
             
         </div>
         <div class="mood">
             <div class="moods my Playlist" id ='new-mod'>
                 <div class="label">My moods 
-
                     <button id="toggle-button">+</button>
-<div id="input-area" style="display: none;">
-  
-  <input type="text" id="input-field"> <input type="submit" value="Create" id="create-mod">
-</div>
-
+                    <div id="input-area" style="display: none;">
+                        <input type="text" id="input-field">
+                        <input type="submit" value="Create" id="create-mod">
+                    </div>
                 </div>
 
                {%if 'user_id' in session%}
@@ -43,12 +49,16 @@
                 <div class="feature flex ">
                     <a class="clickable flex" href=""><i class="fa-brands fa-reddit-alien">
 
-                    </i><p class="item" id="{{i.id}}">{{i.name}}</p></a><div class="info"><ul>
+                    </i><p class="item" id="{{i.id}}">{{i.name}}</p></a>
+                    <div class="info">
+                        <ul>
                             <li><i class="fa-solid fa-flag"></i>
                             </li>
                             <li><p>10k</p></li><li>
-                                    <i class="fa-solid fa-ellipsis-vertical"></i></li></ul></div></div>
-
+                                    <i class="fa-solid fa-ellipsis-vertical"></i></li>
+                        </ul>
+                    </div>
+                </div>
                 {%endfor%}
                 {%endif%}
                

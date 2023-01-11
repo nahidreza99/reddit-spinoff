@@ -136,7 +136,9 @@ def remove_subs(subs,id):
     subreddit.belongs.remove(playlist)
     db.session.commit()
    
-    return jsonify({'res':'OK'})
+    return redirect('/')
+
+
 
 
 @app.route("/send_msg",methods=['POST','GET'])
@@ -180,7 +182,13 @@ def logout():
     reddit=None
     return redirect('/')
 
-
+@app.route("/get_mods",methods=['POST','GET'])
+def mods():
+    
+    
+    list = Playlist.query.filter(Playlist.owner_id==int(session['user_id'])).all()
+    data = [{attr: getattr(obj, attr) for attr in ['id', 'name', 'owner_id']} for obj in list]
+    return jsonify({'list':data})
 
 
 @app.route("/authorize")
@@ -240,9 +248,9 @@ def get_submission(isFront, sub):
     try:
 
         if(isFront):
-            all_id = [submission.id for submission in reddit.front.hot(limit=1)]
+            all_id = [submission.id for submission in reddit.front.hot(limit=10)]
         else:
-            all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=1)]
+            all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=10)]
     except KeyError as e :
         print('error 5 ',e)
         return redirect('/')

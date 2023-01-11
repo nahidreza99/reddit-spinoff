@@ -1,3 +1,5 @@
+const mysubreddit = document.getElementById('my-sub-list');
+
 function convertTime(time){
     time = secondsSinceEpoch - time;
     if(time < 60){
@@ -36,7 +38,7 @@ let requestSent = false;
   const resultsDiv = document.getElementById('slist');
 
   // Add an event listener to the search form to handle form submissions
-  searchForm.addEventListener('submit', (event) => {
+  searchForm.addEventListener('click', (event) => {
     // Prevent the form from submitting
     event.preventDefault();
 
@@ -55,22 +57,42 @@ let requestSent = false;
     const response = JSON.parse(xhr.responseText);
     console.log(response)
     // Clear the results div
-    resultsDiv.innerHTML = '';
+    
     // Display the results
     response.subreddit_name.forEach((name) => {
-        const p = document.createElement('li');
-        p.innerHTML = '<a href="/r/'+name+'">'+name+'</a>';
-        resultsDiv.appendChild(p);
-        
+        const p = document.createElement('div');
+        let sub = '<a href="/r/'+name+'">'+name+'</a>';
+        p.innerHTML += '<div class="feature flex"><a class="clickable flex" href=""> <i class="fa-brands fa-reddit-alien"></i><p>'+sub+'</p></a><div class="info"><ul><li><i class="fa-solid fa-flag"></i></li><li><p>10k</p></li><li><i id="'+'r_'+name+'" class="fa-solid fa-circle-plus"></i></li></ul></div></div>';
+        mysubreddit.appendChild(p);
+        let newVar = document.getElementById('r_'+name);
+        let showMods = document.getElementById('add-sub');
+        newVar.addEventListener('click',(event) => {
+          console.log('working');
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "/get_mods", true);
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          xhr.onload = function ()  {
+          if (xhr.status === 200) {
+          // Parse the response from the server
+            var newRes = JSON.parse(xhr.responseText);
+            newRes.list.forEach((newName)=>{
+              //showMods.innerHTML += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton " id="playlist-list">{%for item in get_mods(session["user_id"])%}{%endfor%}</div>'
+              showMods.innerHTML += '<a class="dropdown-item" href="/add_to_playlist/'+newName.id+'/'+name+'">'+newName.name+'</a>';
+            });
+
+          }
+          };
+          xhr.send();
+          });
     }
     );
     } else {
     // Display an error message if the request fails
-    resultsDiv.innerHTML = 'An error occurred';
+    //resultsDiv.innerHTML = 'An error occurred';
     }
 
     var searchResults = document.querySelector('#slist');
-    searchResults.classList.toggle('open');
+    //searchResults.classList.toggle('open');
   
 
 
@@ -211,7 +233,6 @@ send.addEventListener('click', (event) => {
   // after clicking a playlists , its subreddits will be displayed
 
   var playlist = document.querySelector('.Playlist');
-  const mysubreddit = document.getElementById('my-sub-list');
   // Add an event listener to the container that listens for click events
   playlist.addEventListener('click', function(event) {
     // Check if the clicked element has the 'item' class
@@ -232,8 +253,8 @@ send.addEventListener('click', (event) => {
 
       response.subnames.forEach((name) => {
         
-        p.innerHTML += ' <div class=" tttt"><a class="clickable flex  " href="/r/'+name+'" id="subname">'+name+'</a><a  onclick=remove() href="/remove/'+name+'/'+query+'">remove</a></div>';
-        
+        //p.innerHTML += '<div class=" tttt"><a class="clickable flex  " href="/r/'+name+'" id="subname">'+name+'</a><a  onclick=remove() href="/remove/'+name+'/'+query+'">remove</a></div>';
+        p.innerHTML += '<div class="feature flex"><a class="clickable flex" href=""> <i class="fa-brands fa-reddit-alien"></i><p>'+name+'</p></a><div class="info"><ul><li><i class="fa-solid fa-flag"></i></li><li><p>10k</p></li><li><a  onclick=remove() href="/remove/'+name+'/'+query+'"><i class="fa-solid fa-xmark"></i></a></li></ul></div></div>';
         
     })
      
