@@ -265,13 +265,13 @@ def inject_user():
 def get_submission(isFront, sub):
     try:
         if(isFront):
-            all_id = [submission.id for submission in reddit.front.hot(limit=5)]
+            all_id = [submission.id for submission in reddit.front.hot(limit=15)]
         elif(type(sub)==type('string')):
-            all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=5)]
+            all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=15)]
         else:
             all_id = []
             for x in sub:
-                m = [submission.id for submission in reddit.subreddit(x).hot(limit=2)]
+                m = [submission.id for submission in reddit.subreddit(x).hot(limit=5)]
                 for y in m:
                     all_id.append(y)
     except KeyError as e :
