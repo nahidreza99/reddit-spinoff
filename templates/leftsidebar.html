@@ -16,6 +16,9 @@
     <div class="scrollpane">
         <div class="subr">
             <div class="label sublist" >My Selection</div>
+            <div id = "add-sub" class="flex-vertical popuptext">
+                <!-- <div class="dropdown-menu " aria-labelledby="dropdownMenuButton " id="playlist-list"></div> -->
+            </div>
             <div class="" id ='my-sub-list'  >
                 <!-- <a class="clickable flex" href="">
                     <i class="fa-brands fa-reddit-alien"></i>
@@ -28,9 +31,6 @@
                         <li><i class="fa-solid fa-ellipsis-vertical"></i></li>
                     </ul>
                 </div> -->
-                <div id = "add-sub">
-                    <!-- <div class="dropdown-menu " aria-labelledby="dropdownMenuButton " id="playlist-list"></div> -->
-                </div>
             </div>
             
         </div>
@@ -43,11 +43,11 @@
                         <input type="submit" value="Create" id="create-mod">
                     </div>
                 </div>
-
-               {%if 'user_id' in session%}
+                <div id = "all-moods">
+                    {%if 'user_id' in session%}
                 {%for i in get_mods(session['user_id']) %}
                 <div class="feature flex ">
-                    <a class="clickable flex" href=""><i class="fa-brands fa-reddit-alien">
+                    <a class="clickable flex" href="/m/{{i.id}}"><i class="fa-brands fa-reddit-alien">
 
                     </i><p class="item" id="{{i.id}}">{{i.name}}</p></a>
                     <div class="info">
@@ -61,9 +61,7 @@
                 </div>
                 {%endfor%}
                 {%endif%}
-               
-                
- 
+                </div>
             </div>
             <div class="moods trending">
                 <div class="label">Trending <i class="fa-solid fa-fire-flame-curved"></i></div>

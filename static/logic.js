@@ -59,7 +59,7 @@ let requestSent = false;
     const response = JSON.parse(xhr.responseText);
     console.log(response)
     // Clear the results div
-    
+    mysubreddit.innerHTML = '';
     // Display the results
     response.subreddit_name.forEach((name) => {
         const p = document.createElement('div');
@@ -85,9 +85,20 @@ let requestSent = false;
           }
           };
           xhr.send();
+          showMods.classList.toggle('show');
           });
     }
+    
     );
+    
+    const allMoods = document.getElementById('all-moods');
+    allMoods.innerHTML = '';
+    response.moods.forEach((name) =>{
+      let q  = document.createElement('div');
+      let sub = '<a href="/r/'+name+'">'+name+'</a>';
+      q.innerHTML += '<div class="feature flex"><a class="clickable flex" href=""> <i class="fa-brands fa-reddit-alien"></i><p>'+name.name+'</p></a><div class="info"><ul><li><i class="fa-solid fa-flag"></i></li><li><p>10k</p></li><li><a href="/join/'+name.id+'">join</a></li></ul></div></div>';
+      allMoods.appendChild(q);
+    });
     } else {
     // Display an error message if the request fails
     //resultsDiv.innerHTML = 'An error occurred';
@@ -238,9 +249,10 @@ send.addEventListener('click', (event) => {
   // Add an event listener to the container that listens for click events
   playlist.addEventListener('click', function(event) {
     // Check if the clicked element has the 'item' class
-    event.preventDefault();
+    
     mysubreddit.innerHTML=''
     if (event.target.classList.contains('item')) {
+      event.preventDefault();
       // If it does, log the id of the clicked element
       query=event.target.id;
       console.log('playlist '+query)

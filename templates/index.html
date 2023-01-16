@@ -78,23 +78,6 @@
                     </ul>
                   </div>
 
-                  {%if  sub!='' and sub!='all' and 'user' in session%}
-                  <div id = 'add-to-playlist'>
-                    <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Add to playlist
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton " id="playlist-list">
-                        {%for item in get_mods(session['user_id'])%}
-                       
-                      <a class="dropdown-item" href="{{url_for('add_to_playlist',id=item.id,sub=sub)}}">{{item.name}}</a>
-                      {%endfor%}
-                    </div>
-                  </div>
-                </div>
-                
-                {%endif%}
-
 
                 <div class="scrollpane">
                 <script>var video_url = new Object();
@@ -102,7 +85,7 @@
                         var galleries = [];
                         var secondsSinceEpoch = Math.round(Date.now() / 1000);
                 </script>
-                {% for i, submission in get_submission(front,sub) %}
+                {% for i, submission in get_submission(front,_sub) %}
                 <div class="post-container" id="{{i}}">
                     <div class="post-header">
                         <a class="clickable flex" href="/r/{{submission.subreddit.display_name}}">

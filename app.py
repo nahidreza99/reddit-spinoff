@@ -85,10 +85,18 @@ def mainpage(t,red):
             print('exxor 2')
             
     front = True
-    sub = ''
-    if red!='all':
+    _sub = None
+    if t == 'm':
+        playlist = Playlist.query.filter_by(id=int(red)).first()
+        subs = []
         front = False
-        sub = red
+        for x in playlist.has:
+            subs.append(x.name)
+        _sub = subs
+    else:
+        if red!='all':
+            front = False
+            _sub = red
     return render_template('index.html', **locals())
 
 
@@ -226,18 +234,28 @@ def authorize():
 
 @app.route('/api/search-subreddits', methods=['POST','GET'])
 def search_subreddits():
-  # Get the search query from the request
-  query = request.form['query']
+    # Get the search query from the request
+    query = request.form['query']
 
-  # Search for subreddits using PRAW
-  subreddits = reddit.subreddits.search(query,limit=10)
+    # Search for subreddits using PRAW
+    subreddits = reddit.subreddits.search(query,limit=10)
+    moods = Playlist.query.filter(Playlist.name.contains(query)).all()
+    data = [{attr: getattr(obj, attr) for attr in ['id', 'name','owner_id']} for obj in moods]
+    print('Matches: ',moods)
+    # Create a list of subreddit names
+    subreddit_names = [subreddit.display_name for subreddit in subreddits]
+    #print(subreddit_names)
+    # Return the list of subreddit names as a JSON response
+    return  jsonify({'subreddit_name': subreddit_names, 'moods': data})
 
-  # Create a list of subreddit names
-  subreddit_names = [subreddit.display_name for subreddit in subreddits]
-  #print(subreddit_names)
-  # Return the list of subreddit names as a JSON response
-  return  jsonify({'subreddit_name': subreddit_names})
-
+@app.route('/join/<int:id>')
+def join(id):
+    user = User.query.filter_by(id=session['user_id']).first()
+    playlist = Playlist.query.filter_by(id=id).first()
+    user.joined.append(playlist)
+    db.session.commit()
+    print('joined')
+    return redirect('/r/all')
 @app.context_processor
 def inject_user():
     
@@ -246,11 +264,16 @@ def inject_user():
 
 def get_submission(isFront, sub):
     try:
-
         if(isFront):
             all_id = [submission.id for submission in reddit.front.hot(limit=5)]
-        else:
+        elif(type(sub)==type('string')):
             all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=5)]
+        else:
+            all_id = []
+            for x in sub:
+                m = [submission.id for submission in reddit.subreddit(x).hot(limit=2)]
+                for y in m:
+                    all_id.append(y)
     except KeyError as e :
         print('error 5 ',e)
         return redirect('/')
@@ -327,7 +350,11 @@ def is_crosspost(submission):
     return sub
 def get_mods(id):
     list = Playlist.query.filter(Playlist.owner_id==int(id)).all()
+    myPlaylist = User.query.filter_by(id=int(id)).first().joined
+    for x in myPlaylist:
+        list.append(x)
     print(list)
+
     return list
 def get_chats():
     list = Chatbox.query.order_by(desc(Chatbox.id)).all()
