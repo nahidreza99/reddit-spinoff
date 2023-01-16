@@ -1,5 +1,7 @@
 const mysubreddit = document.getElementById('my-sub-list');
 
+
+
 function convertTime(time){
     time = secondsSinceEpoch - time;
     if(time < 60){
@@ -495,3 +497,34 @@ observer.observe(s, {
 });
 
 
+// theme
+
+const theme = document.getElementById('theme');
+let theme_toggle = 0;
+theme.addEventListener('click',function(event) {
+  const nav = document.getElementById('nav');
+  const par = document.getElementsByTagName('p');
+  const logo = document.getElementsByClassName('logo');
+  const left = document.getElementById('left');
+  const center = document.getElementById('center');
+  const user = document.getElementById('user-info');
+  const shoutbox = document.getElementById('shoutbox');
+  nav.classList.toggle("light-main");
+  if(theme_toggle){
+    left.classList.replace("light-main","dark-main");
+    center.classList.replace("light-main","dark-main");
+    user.classList.replace("light-main","dark-main");
+    shoutbox.classList.replace("light-main","dark-main");
+    theme_toggle=0;
+    for(var p of par){
+      p.classList.toggle("dark-font");
+    }
+  }
+  else{
+    left.classList.replace("dark-main", "light-main");
+    center.classList.replace("dark-main","light-main");
+    user.classList.replace("dark-main","light-main");
+    shoutbox.classList.replace("dark-main", "light-main");
+    theme_toggle=1;
+  }
+});

@@ -1,5 +1,5 @@
-<div class="cont right">
-    <div class="user-info">
+<div class="right">
+    <div id="user-info" class="user-info cont dark-main">
         <div class="avatar">
             <img src="{{get_avatar(reddit.user.me())}}" height="100px" alt="">
             <p class="bold">u/{{reddit.user.me()}}</p>
@@ -31,7 +31,7 @@
             ageCont.appendChild(convertTime(created));
         </script>
     </div>
-    <div class="shoutbox">
+    <div id="shoutbox" class="shoutbox cont dark-main">
         <div class="shoutbox-label">Shoutbox</div>
         <div class="shout"  id ='shout-box'>
             {%for i in get_chats()%}

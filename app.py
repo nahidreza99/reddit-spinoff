@@ -248,9 +248,9 @@ def get_submission(isFront, sub):
     try:
 
         if(isFront):
-            all_id = [submission.id for submission in reddit.front.hot(limit=10)]
+            all_id = [submission.id for submission in reddit.front.hot(limit=5)]
         else:
-            all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=10)]
+            all_id = [submission.id for submission in reddit.subreddit(sub).hot(limit=5)]
     except KeyError as e :
         print('error 5 ',e)
         return redirect('/')

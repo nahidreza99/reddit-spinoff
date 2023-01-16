@@ -46,11 +46,11 @@
         }
     </script>
     <header>
-        <nav class="flex">
+        <nav id="nav" class="flex">
             <div class="logo">Reddit Mod</div>
             <div class="nav-bar">
                 <ul class="nav-btn flex">
-                    <li><a href="#">Display</a></li>
+                    <li><i id="theme" class="fa-solid fa-sun"></i></li>
                     
                     {%if reddit and reddit.user.me()%}
                     <li> {{reddit.user.me()}}</li>
@@ -67,7 +67,7 @@
     <main class="main">
         <div class="container index">
                 {%include 'leftsidebar.html'%}
-            <div class="cont center">
+            <div id ="center" class="cont center dark-main">
                 <div class="search">
                    
                 </div>
@@ -126,7 +126,6 @@
                     {%if submission.selftext !=''%}
                     <div id="{{i}}-body" class="grey post-body">{{submission.selftext}}
                     </div>
-                    {%endif%}
                     <script>
                         var element = document.getElementById('{{i}}-body');
                         var height = element.clientHeight;
@@ -134,6 +133,8 @@
                             element.className += " post-scroll";
                         }
                     </script>
+                    {%endif%}
+                    
                     {%elif is_crosspost(submission) != None %}
 
                     {% for crosspost in is_crosspost(submission) %}

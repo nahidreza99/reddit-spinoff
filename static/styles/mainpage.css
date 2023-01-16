@@ -41,6 +41,15 @@ p{
     color: white;
 }
 
+.light-main{
+    background-color: whitesmoke;
+    color: #000B17;
+}
+
+.light-grey{
+    background-color: #717171;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -139,6 +148,10 @@ nav{
     height: 100%;
 }
 
+.dark-main{
+    background-color: #000B17;
+}
+
 .index{
     margin-top: 10px;
     display: grid;
@@ -147,12 +160,10 @@ nav{
 }
 
 .left{
-    background-color: #000B17;
     border-radius: 0 10px 0 0;
 }
 
 .center{
-    background-color: #000B17;
     border-radius: 10px 10px 0 0;
     max-width: 650px;
 }
@@ -168,7 +179,6 @@ nav{
     justify-content: center;
     align-items: center;
     height: 50px;
-    background-color: #000B17;
     border-radius: inherit;
    
 }
@@ -221,6 +231,10 @@ transition: max-height 0.5s;
     padding: 0 10px;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-font{
+    color:#000B17;
 }
 
 .feature{
@@ -341,7 +355,6 @@ a ul li{
 }
 
 .user-info{
-    background-color: #000B17;
     border-radius: 10px 0 0 10px;
     display: grid;
     grid-template-columns: 5fr 3fr;
@@ -420,7 +433,6 @@ a ul li{
 }
 
 .shoutbox{
-    background-color: #000B17;
     border-radius: 10px 0 0 0;
     color: white;
 }
