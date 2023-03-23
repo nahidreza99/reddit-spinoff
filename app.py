@@ -360,8 +360,6 @@ def get_chats():
     list = Chatbox.query.order_by(desc(Chatbox.id)).all()
     return list
 
-if __name__ == "__main__":
-    app.run(debug=True)
 app.jinja_env.globals.update(check_gallery=check_gallery)
 app.jinja_env.globals.update(get_urls=get_urls)
 app.jinja_env.globals.update(get_submission=get_submission)
@@ -376,3 +374,6 @@ app.jinja_env.globals.update(is_crosspost=is_crosspost)
 app.jinja_env.globals.update(get_reddit_age=get_reddit_age)
 app.jinja_env.globals.update(get_mods=get_mods)
 app.jinja_env.globals.update(get_chats=get_chats)
+
+if __name__ == "__main__":
+    app.run(debug=True)

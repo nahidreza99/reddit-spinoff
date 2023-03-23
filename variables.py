@@ -1,7 +1,7 @@
 import praw
 
-Client_ID = '5pL7d93G5ZW1FDltt3utFA'
-Client_Secret = 'hbBDgd4VVr4VXz1eT-PIjzgaIZjzog'
+Client_ID = ''
+Client_Secret = ''
 User_Agent = 'script:com.example.myredditapp:v1.2.3 (by u/testbot)'
 
  

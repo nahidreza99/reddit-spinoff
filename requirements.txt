@@ -1,0 +1,6 @@
+flask
+waitress
+requests
+praw
+pillow
+flask_sqlalchemy
