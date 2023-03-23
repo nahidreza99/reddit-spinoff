@@ -10,9 +10,10 @@ PRAW library is used to fetch APIS of reddit. Read their documentation https://p
 2. Open with Vscode.
 3. Create virtual environment:
     1. ctrl + shift + p
-    2. Select python 3.10 as the interpreter
-    3. Open terminal: ctrl + `
-    4. Activate virtual environment: ```#source .venv/bin/activate```
+    2. Select "Python: Create environment".
+    3. Select "python 3.10" as the interpreter
+    4. Open terminal: ctrl + `
+    5. Activate virtual environment: ```#source .venv/bin/activate```
 4. Install the requirements: ```#pip3 install -r "requirements.txt"```
 
 # Getting Started
